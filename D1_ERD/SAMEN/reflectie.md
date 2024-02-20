@@ -1,8 +1,8 @@
 **Team:** INF202_18_TDR_joppe_muhammet
 
- - **Name:** Tom De Reys (S1)
- - **Studentnr:** 0123456789
- - **Class:** INF207A
+ - **Name:** Joppe Dechamps (S1)
+ - **Studentnr:** 0153912-70
+ - **Class:** INF202A
 
 
  - **Name:** Muhammet Murat (S2)
@@ -12,55 +12,58 @@
 **Year:** 2023-2024
 
 
-S1: Onderwerp: (veel op veel)
+S1: Onderwerp: User - Smartphone
 ------------------------------------
-- A: Players
-- B: Computergames
-- C: Game_servers
-- D: Game_session
+- A: User
+- B: Smartphone
+- C: Website
+- D: Review
 
 
 
 S1 Relatietypes:
 -------------
-- Player
-    - start
-    - Game_session
--  Computer game
-    - is played in
-    - Game_Session
--  Game_session
-    - is hosted on
-    - Game_Server
+- User
+    - writes
+    - Review
+-  Smartphone
+    - is talked about in
+    - Review
+-  Review
+    - is posted on
+    - Website
 
 S1 Attributen:
 -----------
-- A: Players
-    - Player_id (PK)
-    - name
+- A: User
+    - user_ID (PK)
+    - first_name
+    - last_name
     - email
-    - street
-    - street number
-    - city
-    - country
-- B: Computergames
-    - Game_id (PK)
-    - computergame title
+    - phone_number
+    - birthdate
+  
+- B: Smartphone
+    - phone_ID (PK)
     - release_date
-    - last updated
-    - patch_title
-- C: Game_servers
-    - Game_server_id
-    - Server_name
-    - region
-- D: Game_session
-    - player_ID, game_id, start_date (PK)
-    - player_ID (FK)
-    - game_ID (FK)
-    - game_server_id (FK)
-    - high score
-    - start_date
-    - Version
+    - screen_diagonal
+    - camera_amount
+    - processor_cores
+    - memory
+  
+- C: Review
+    - user_ID (PK, FK)
+    - phone_ID (PK, FK)
+    - postedDate (PK)
+    - website_ID (FK)
+    - title
+    - content
+    - likes
+  
+- D: Website
+    - website_ID (PK)
+    - web_address
+    - name
 
 
 S2: Onderwerp: (2 niveaus diep)
@@ -115,7 +118,7 @@ S2 Attributen:
 
 Samen: Extra Entiteittypes:
 --------------
-- 
+- ~~~~
 
 Relatietypes:
 -------------
