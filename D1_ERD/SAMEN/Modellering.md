@@ -4,9 +4,9 @@ Name: Tom De Reys (S1)
 Studentnr: 0123456789
 Class: INF207A
 
-Name: Anniek Cornelis (S2)
-Studentnr: 0123456789
-Class: INF207B
+Name: Muhammet Murat (S2)
+Studentnr: 0154865-53
+Class: INF202A
 
 Year: 2023-2024
 
@@ -26,10 +26,10 @@ Entiteittypes + Attributen + PK
 
 
     S2
-- W: video_categories ( **category_id**, category_name, category_description)
-- X: computergames (S1 Tabel B)
-- Y: Influencer_youtubechannel(**channel_id**, game_id, channel_name, channel_url, subscriber_count, creation_date)
-- Z: Influencer_youtubevideo(**video_id**, channel_id, category_id, players_id,video_title, view_count, video_url, video_duration, creation_date)
+- W: sales_promotions ( **sales_id**, sales_name, sales_description)
+- X: brands ( **brand_id**, brand_name,hq_number ,hq_street ,hq_zip ,hq_city ,founding_date)
+- Y: brand_stores (**store_id**, brand_id, store_location, employee_count, opening_date, closing_date)
+- Z: promotion(**promotion_id**, store_id, sales_id, smartphone_id, promotion_discount, promotion_name, promotion_start, promotion_end)
 
 
 Domeinen - constraints
@@ -40,14 +40,14 @@ Domeinen - constraints
 
 
     S2
-- Influencer_youtubevideo duration between 1 minute and 24 hours
+- Promotion: discount > 100 
 - Videos category name must start with a capital.
 
 
 Tijd 
 ---
 - S1: Game_session: De gamesession start_date en end_date houdt de historiek bij.
-- S2: Influencer_youtubechannel has a creation date. All child videos are created after this date. 
+- S2: Brand has a founding date. All child stores are created after this date. 
 
 
 Intermediërende  entiteiten
@@ -63,7 +63,7 @@ Logisch ERD
 
     S2: ERD
 
-![S1_logisch.png](../S2/S2_logisch.png)
+![S2_logisch.png](../S2/S2_logisch.png)
 
 informatiebehoefte + Normalisatie
 ---

@@ -110,7 +110,7 @@ S2 Attributen:
     - employee_count
     - opening_date
     - closing_date
-- Z: promotion
+- Z: Promotion
     - promotion_id (PK)
     - store_id (FK)
     - sales_id (FK)
