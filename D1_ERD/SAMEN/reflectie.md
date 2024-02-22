@@ -106,6 +106,8 @@ S2 Attributen:
     - brand_id (FK)
     - store_location
     - employee_count
+    - opening-date
+    - closing-date
 - Z: promotion
     - promotion_id (PK)
     - store_id (FK)
