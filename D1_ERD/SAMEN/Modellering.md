@@ -1,8 +1,8 @@
-Team: 99
+Team: 18
 
-Name: Tom De Reys (S1)
-Studentnr: 0123456789
-Class: INF207A
+Name: Joppe Dechamps (S1)
+Studentnr: 0153912-70
+Class: INF202A
 
 Name: Anniek Cornelis (S2)
 Studentnr: 0123456789
@@ -18,11 +18,10 @@ TOP DOWN MODELERING
 Entiteittypes + Attributen + PK
 ---
     S1
-- A: players ( **player_id**, player_name, email, dob, street, house_number, zip_code, city, country )
-- B: computergames ( **game_id**, game_title, release_date, last_updated, patch_title, game_studio_id)
-- C: game_servers (**game_server_id**, server_name, region, next_maintenance)
-- D: Game_session(**player_id**, **game_id**, **start_date**, game_server_id, high_score, end_date, version)
-- Game_studio(**game_studio_id**, game_studio_name , game_studio_address)
+- A: users ( **user_ID**, first_name, last_name, email, phone_number, birthdate)
+- B: smartphones ( **phone_ID**, release_date, screen_diagonal, camera_amount, processor_cores, memory)
+- C: reviews ( **user_ID**, **phone_ID**, **postedDate**, **website_ID**, lastEditedDate, title)
+- D: websites ( **website_ID**, website_name, website_url)
 
 
     S2
@@ -35,8 +34,8 @@ Entiteittypes + Attributen + PK
 Domeinen - constraints
 --- 
     S1
-- Player: zipcodes - minimum 4 characters
-- Computergame: release_date < last_updated
+- User: 
+- Website: format: www.\***.\*** / https\://www.\***.\***
 
 
     S2
@@ -59,7 +58,7 @@ Intermediërende  entiteiten
 Logisch ERD 
 ---
     S1: ERD
-![S1_logisch.png](../S1/S1_logisch.png)
+![S1_logisch.png](../S1/S1_ERD_Joppe_Dechamps.png)
 
     S2: ERD
 
