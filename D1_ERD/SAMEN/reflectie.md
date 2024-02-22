@@ -6,7 +6,7 @@
 
 
  - **Name:** Muhammet Murat (S2)
- - **Studentnr:** 
+ - **Studentnr:** 0154865-53
  - **Class:** INF202A
 
 **Year:** 2023-2024
