@@ -101,13 +101,14 @@ S2 Attributen:
     - hq_street
     - hq_zip
     - hq_city
+    - founding_date
 - Y: Brand_store
     - store_id (PK)
     - brand_id (FK)
     - store_location
     - employee_count
-    - opening-date
-    - closing-date
+    - opening_date
+    - closing_date
 - Z: promotion
     - promotion_id (PK)
     - store_id (FK)
