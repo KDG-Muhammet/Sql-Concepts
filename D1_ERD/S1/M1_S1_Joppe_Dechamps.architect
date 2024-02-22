@@ -13,7 +13,7 @@
   <table id="TAB1" populated="true" UUID="513a9248-5fc6-478e-a52e-ddee1bd59718" name="User" objectType="TABLE" physicalName="users" >
    <remarks></remarks>
    <folder id="FOLTAB11" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL2" populated="true" UUID="a65911aa-7697-4088-bd2a-aa1db47fa29a" autoIncrement="false" autoIncrementSequenceName="users_user_ID_seq" defaultValue="" name="user_ID" nullable="0" physicalName="user_ID" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="2" userDefinedTypeUUID="115245ce-612c-4d6a-b559-6dd903dd959a" >
+    <column id="COL2" populated="true" UUID="a65911aa-7697-4088-bd2a-aa1db47fa29a" autoIncrement="false" autoIncrementSequenceName="users_user_ID_seq" defaultValue="" name="user_ID" nullable="0" physicalName="user_ID" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
     <column id="COL3" populated="true" UUID="8a7c7b41-50d1-43cf-89b2-e41aeeddb05e" autoIncrement="false" autoIncrementSequenceName="users_name_seq" defaultValue="" name="first_name" nullable="0" physicalName="first_name" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
@@ -45,16 +45,16 @@
   <table id="TAB10" populated="true" UUID="13265095-a8df-4489-a8b9-5037dd3a2fe6" name="Review" objectType="TABLE" physicalName="reviews" >
    <remarks></remarks>
    <folder id="FOLTAB101" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL11" populated="true" UUID="92326aa5-44b8-4f5a-b30b-5323cf798ba1" autoIncrement="false" autoIncrementSequenceName="users_user_ID_seq" defaultValue="" name="user_ID" nullable="0" physicalName="user_ID" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="2" userDefinedTypeUUID="115245ce-612c-4d6a-b559-6dd903dd959a" >
+    <column id="COL11" populated="true" UUID="92326aa5-44b8-4f5a-b30b-5323cf798ba1" autoIncrement="false" autoIncrementSequenceName="users_user_ID_seq" defaultValue="" name="user_ID" nullable="0" physicalName="user_ID" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL12" populated="true" UUID="a8d8b3f8-7919-4abb-bb3d-d7e77bf38120" autoIncrement="false" autoIncrementSequenceName="smartphones_phone_ID_seq" defaultValue="" name="phone_ID" nullable="0" physicalName="phone_ID" precision="0" primaryKeySeq="1" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="2" userDefinedTypeUUID="115245ce-612c-4d6a-b559-6dd903dd959a" >
+    <column id="COL12" populated="true" UUID="a8d8b3f8-7919-4abb-bb3d-d7e77bf38120" autoIncrement="false" autoIncrementSequenceName="smartphones_phone_ID_seq" defaultValue="" name="phone_ID" nullable="0" physicalName="phone_ID" precision="0" primaryKeySeq="1" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
     <column id="COL13" populated="true" UUID="146b9860-8929-4852-957b-4f11c47a3932" autoIncrement="false" autoIncrementSequenceName="reviews_postedDate_seq" defaultValue="" name="postedDate" nullable="0" physicalName="postedDate" precision="0" primaryKeySeq="2" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="91" userDefinedTypeUUID="ee349be3-6af2-46e1-b305-975f5354b009" >
      <remarks></remarks>
     </column>
-    <column id="COL14" populated="true" UUID="48d98143-59ed-44e4-a121-0fa7a92f6060" autoIncrement="false" autoIncrementSequenceName="reviews_website_ID_seq" defaultValue="" name="website_ID" nullable="0" physicalName="website_ID" precision="0" referenceCount="2" scale="0" sourceDataTypeName="UserDefinedSQLType" type="2" userDefinedTypeUUID="115245ce-612c-4d6a-b559-6dd903dd959a" >
+    <column id="COL14" populated="true" UUID="48d98143-59ed-44e4-a121-0fa7a92f6060" autoIncrement="false" autoIncrementSequenceName="reviews_website_ID_seq" defaultValue="" name="website_ID" nullable="0" physicalName="website_ID" precision="0" referenceCount="2" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
     <column id="COL15" populated="true" UUID="12df8e07-867c-4002-893b-dff16f04ffb5" autoIncrement="false" autoIncrementSequenceName="reviews_title_seq" defaultValue="" name="title" nullable="0" physicalName="title" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
@@ -82,7 +82,7 @@
   <table id="TAB22" populated="true" UUID="5460296a-61b7-42d8-b96b-e20812c20868" name="Smartphone" objectType="TABLE" physicalName="smartphones" >
    <remarks></remarks>
    <folder id="FOLTAB221" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL23" populated="true" UUID="026ee16f-e530-423c-89ba-1f806c5d6b60" autoIncrement="false" autoIncrementSequenceName="smartphones_phone_ID_seq" defaultValue="" name="phone_ID" nullable="0" physicalName="phone_ID" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="2" userDefinedTypeUUID="115245ce-612c-4d6a-b559-6dd903dd959a" >
+    <column id="COL23" populated="true" UUID="026ee16f-e530-423c-89ba-1f806c5d6b60" autoIncrement="false" autoIncrementSequenceName="smartphones_phone_ID_seq" defaultValue="" name="phone_ID" nullable="0" physicalName="phone_ID" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
     <column id="COL24" populated="true" UUID="be6d8508-c966-49df-8c22-11a1edd46cd2" autoIncrement="false" autoIncrementSequenceName="smartphones_launchDate_seq" defaultValue="" name="release_date" nullable="1" physicalName="release_date" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="91" userDefinedTypeUUID="ee349be3-6af2-46e1-b305-975f5354b009" >
@@ -149,7 +149,7 @@
  <ddl-generator type="ca.sqlpower.architect.ddl.GenericDDLGenerator" allow-connection="true"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
- <play-pen zoom="1.414213562373095" viewportX="41" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
+ <play-pen zoom="1.414213562373095" viewportX="0" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
   <table-pane table-ref="TAB1" x="115" y="176" bgColor="0xeeeeee" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB10" x="403" y="170" bgColor="0xeeeeee" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB22" x="709" y="153" bgColor="0xeeeeee" fgColor="0x000000" rounded="false" dashed="false"/>

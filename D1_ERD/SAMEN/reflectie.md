@@ -56,6 +56,7 @@ S1 Attributen:
     - phone_ID (PK, FK)
     - postedDate (PK)
     - website_ID (FK)
+    - lastEditedDate
     - title
     - content
     - likes
