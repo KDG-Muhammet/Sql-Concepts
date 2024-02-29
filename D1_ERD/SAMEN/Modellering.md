@@ -25,10 +25,10 @@ Entiteittypes + Attributen + PK
 
 
     S2
-- W: sales_promotions ( **sales_id**, sales_name, sales_description)
+- W: promotion ( **promotion_id**, promotion_discount, promotion_name, promotion_start, promotion_end)
 - X: brands ( **brand_id**, brand_name,hq_number ,hq_street ,hq_zip ,hq_city ,founding_date)
 - Y: brand_stores (**store_id**, brand_id, store_location, employee_count, opening_date, closing_date)
-- Z: promotion(**promotion_id**, store_id, sales_id, smartphone_id, promotion_discount, promotion_name, promotion_start, promotion_end)
+- Z: sale(**sale_id**, store_id, promotion_id, smartphone_id, date_discount, sale_name)
 
 
 Domeinen - constraints
@@ -40,7 +40,7 @@ Domeinen - constraints
 
     S2
 - Promotion: discount > 100 
-- Videos category name must start with a capital.
+- Brand: Hq_ip < 0
 
 
 Tijd 
@@ -74,7 +74,7 @@ informatiebehoefte + Normalisatie
     S2:
 [Informatiebehoefte S2.pdf](..%2F..%2FD2_NORMALISATIE%2FS2_normalisatie%2FInformatiebehoefte%20S2.pdf)
 
-[S2_normalisatie_computergames.pdf](..%2F..%2FD2_NORMALISATIE%2FS2_normalisatie%2FS2_normalisatie_computergames.pdf)
+[S2_normalisatie_smartphones.pdf](..%2F..%2FD2_NORMALISATIE%2FS2_normalisatie%2FS2_normalisatie_smartphones.pdf)
 
     SAMEN:
 [S1S2_computergames_Integration.pdf](..%2F..%2FD2_NORMALISATIE%2FSAMEN_integratie%2FS1S2_computergames_Integration.pdf)

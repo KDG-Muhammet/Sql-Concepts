@@ -69,10 +69,10 @@ S1 Attributen:
 
 S2: Onderwerp: (2 niveaus diep)
 -----------------------------
-- W: Sales_promotion
+- W: Promotion
 - X: Brand
 - Y: Brand_store
-- Z: promotion
+- Z: Sale
 
 S2 Relatietypes:
 -------------
@@ -81,20 +81,22 @@ S2 Relatietypes:
   - brand store
 - Brand store
   - makes
-  - promotions
-- Promotion
-  - is part of a  
-  - sale
-- Promotion
+  - sales
+- Sale
+  - has a  
+  - promotion
+- Sale
   - belongs to a 
   - smartphone
 
 S2 Attributen:
 --------------
-- W: Sales_promotion
-    - sales_id (PK)
-    - sales_name
-    - sales_description
+- W: Promotion
+    - promotion_id (PK)
+    - promotion_discount
+    - promotion_name
+    - promotion_start
+    - promotion_end
 - X: Brand
     - brand_id (PK)
     - brand_name
@@ -110,15 +112,13 @@ S2 Attributen:
     - employee_count
     - opening_date
     - closing_date
-- Z: Promotion
-    - promotion_id (PK)
+- Z: Sale
+    - sale_id (PK)
     - store_id (FK)
-    - sales_id (FK)
+    - promotion_id (FK)
     - smartphone_id (FK)
-    - promotion_discount
-    - promotion_name
-    - promotion_start
-    - promotion_end
+    - date_discount
+    - sale_name
 
 Samen: Extra Entiteittypes:
 --------------
