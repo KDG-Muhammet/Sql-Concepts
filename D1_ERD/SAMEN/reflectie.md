@@ -45,6 +45,7 @@ S1 Attributen:
   
 - B: Smartphone
     - phone_ID (PK)
+    - name
     - release_date
     - screen_diagonal
     - camera_amount
