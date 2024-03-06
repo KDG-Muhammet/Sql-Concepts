@@ -75,7 +75,7 @@ informatiebehoefte + Normalisatie
 [S2_normalisatie_smartphones.pdf](..%2F..%2FD2_NORMALISATIE%2FS2_normalisatie%2FS2_normalisatie_smartphones.pdf)
 
     SAMEN:
-[S1S2_computergames_Integration.pdf](..%2F..%2FD2_NORMALISATIE%2FSAMEN_integratie%2FS1S2_computergames_Integration.pdf)
+[S1S2_smartphones_Integration.pdf](..%2F..%2FD2_NORMALISATIE%2FSAMEN_integratie%2FS1S2_smartphones_Integration.pdf)
 
 
 
@@ -88,5 +88,5 @@ Verschillen na Normalisatie (SAMEN)
 
 
 
-![Finaal_ERD_M2.png](Finaal_ERD_M2.png)
+![Finaal_ERD_M2.png](../../D2_NORMALISATIE/SAMEN_integratie/Finaal_ERD_M2.png)
 
