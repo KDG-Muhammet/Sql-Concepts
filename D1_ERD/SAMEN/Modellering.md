@@ -26,9 +26,9 @@ Entiteittypes + Attributen + PK
 
     S2
 - W: promotion ( **promotion_id**, promotion_discount, promotion_name, promotion_start, promotion_end)
-- X: brands ( **brand_id**, brand_name,hq_number ,hq_street ,hq_zip ,hq_city ,founding_date)
+- X: brands ( **brand_id**, brand_name,hq_number ,hq_street ,hq_zip ,hq_city ,founding_date, brand_founder, key_people, type)
 - Y: brand_stores (**store_id**, brand_id, store_location, employee_count, opening_date, closing_date)
-- Z: sale(**sale_id**, store_id, promotion_id, smartphone_id, date_discount, sale_name)
+- Z: sale(**sale_id**, store_id, promotion_id, smartphone_id, date_discount, sale_name, due_date)
 
 
 Domeinen - constraints
@@ -65,7 +65,7 @@ Logisch ERD
 informatiebehoefte + Normalisatie
 ---
     S1:
-[informatiebehoefte_S1.pdf](..%2F..%2FD2_NORMALISATIE%2FS1_normalisatie%2Finformatiebehoefte%20S1.pdf)
+[informatiebehoefte_S1.pdf](..%2F..%2FD2_NORMALISATIE%2FS1_normalisatie%2Finformatiebehoefte_S1.pdf)
 
 [S1_normalisatie_smartphones.pdf](..%2F..%2FD2_NORMALISATIE%2FS1_normalisatie%2FS1_normalisatie_smartphones.pdf)
 
