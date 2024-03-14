@@ -7,3 +7,4 @@ SELECT 'S2-Y  : brand_stores',          (SELECT COUNT(*) FROM brand_stores      
 SELECT 'S2-Z  : sales',                 (SELECT COUNT(*) FROM sales                 ) FROM DUAL UNION
 SELECT 'S2-W  : promotions',            (SELECT COUNT(*) FROM promotions            ) FROM DUAL UNION
 SELECT 'S2_  : addresses',              (SELECT COUNT(*) FROM addresses             ) FROM DUAL;
+SELECT * FROM USERS;
