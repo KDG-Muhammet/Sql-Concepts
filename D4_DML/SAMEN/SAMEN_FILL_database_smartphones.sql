@@ -167,14 +167,14 @@ VALUES (1005, 30, 'Spring Clearance', TO_DATE('2024-04-01', 'YYYY-MM-DD'), TO_DA
 
 -- Insert data into Sale table
 INSERT INTO Sale (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
-VALUES (TO_DATE('2024-08-05', 'YYYY-MM-DD'), 10001, (SELECT promotion_id FROM Promotion WHERE name = 'Summer Sale'),
+VALUES (TO_DATE('2024-08-05', 'YYYY-MM-DD'), (SELECT phone_ID FROM smartphones WHERE name = 'iPhone 15'), (SELECT promotion_id FROM Promotion WHERE name = 'Summer Sale'),
         (SELECT store_id
          FROM Brand_store
          WHERE address_id =
                (SELECT address_id FROM Address WHERE zip = 12345 AND street = 'Broadway' AND street_number = 100)),
         'John Doe', TO_DATE('2023-06-15', 'YYYY-MM-DD'));
 INSERT INTO Sale (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
-VALUES (TO_DATE('2024-12-24', 'YYYY-MM-DD'), 10002, (SELECT promotion_id FROM Promotion WHERE name = 'Back to School'),
+VALUES (TO_DATE('2024-12-24', 'YYYY-MM-DD'), (SELECT phone_ID FROM smartphones WHERE name = 'iPhone 15'), (SELECT promotion_id FROM Promotion WHERE name = 'Back to School'),
         (SELECT store_id
          FROM Brand_store
          WHERE address_id =
@@ -185,14 +185,14 @@ VALUES (TO_DATE('2024-12-24', 'YYYY-MM-DD'), 10002, (SELECT promotion_id FROM Pr
                   AND street_number = 200)),
         'Jane Smith', TO_DATE('2023-09-05', 'YYYY-MM-DD'));
 INSERT INTO Sale (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
-VALUES (TO_DATE('2024-07-10', 'YYYY-MM-DD'), 10003, (SELECT promotion_id FROM Promotion WHERE name = 'Holiday Special'),
+VALUES (TO_DATE('2024-07-10', 'YYYY-MM-DD'), (SELECT phone_ID FROM smartphones WHERE name = 'iPhone 15'), (SELECT promotion_id FROM Promotion WHERE name = 'Holiday Special'),
         (SELECT store_id
          FROM Brand_store
          WHERE address_id =
                (SELECT address_id FROM Address WHERE zip = 98765 AND street = 'Michigan Ave' AND street_number = 300)),
         'Alice Johnson', TO_DATE('2023-12-20', 'YYYY-MM-DD'));
 INSERT INTO Sale (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
-VALUES (TO_DATE('2024-12-30', 'YYYY-MM-DD'), 10004,
+VALUES (TO_DATE('2024-12-30', 'YYYY-MM-DD'), (SELECT phone_ID FROM smartphones WHERE name = 'iPhone 15'),
         (SELECT promotion_id FROM Promotion WHERE name = 'New Year Discount'),
         (SELECT store_id
          FROM Brand_store
@@ -200,7 +200,7 @@ VALUES (TO_DATE('2024-12-30', 'YYYY-MM-DD'), 10004,
                (SELECT address_id FROM Address WHERE zip = 11111 AND street = 'Main St' AND street_number = 400)),
         'Bob Brown', TO_DATE('2024-01-10', 'YYYY-MM-DD'));
 INSERT INTO Sale (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
-VALUES (TO_DATE('2024-11-29', 'YYYY-MM-DD'), 10005,
+VALUES (TO_DATE('2024-11-29', 'YYYY-MM-DD'), (SELECT phone_ID FROM smartphones WHERE name = 'iPhone 15'),
         (SELECT promotion_id FROM Promotion WHERE name = 'Spring Clearance'),
         (SELECT store_id
          FROM Brand_store
