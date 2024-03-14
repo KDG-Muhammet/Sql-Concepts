@@ -40,7 +40,7 @@ Domeinen - constraints
 
     S2
 - Promotion: discount <= 100
-- Brand: Hq_ip < 0
+- Brand: zip < 0
 
 Tijd 
 ---
@@ -84,7 +84,9 @@ Verschillen na Normalisatie (SAMEN)
 - Phone - added new attributes: phone_name and storage
 - Review - added new attributes: rating and last_edited_date
 - Website - changed attribute names from website_url and website_name to web_address and name correspondingly
-- added HQ Adresses table
+- Brand - added new attributes brand_founder, key_people and type
+- Sale - added new attributes due_date 
+- added Adresses table
 
 
 
