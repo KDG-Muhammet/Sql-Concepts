@@ -16,8 +16,15 @@ GRANT Z TO S2;
 -- view
 
 CREATE VIEW view1 as
-SELECT brand_name, founding_date, store_location, opening_date
+SELECT brand_name, founding_date, opening_date
 FROM Brand b
 JOIN Brand_store bs ON b.brand_id = bs.brand_id;
 
 GRANT INSERT ON Brand TO S1;
+
+-----------
+
+SELECT * FROM ALL_USERS;
+
+INSERT INTO view1 (brand_name, founding_date, opening_date)
+VALUES ('new brand', TO_DATE('2024-01-01', 'YYYY-MM-DD'), TO_DATE('2025-01-01', 'YYYY-MM-DD'));
