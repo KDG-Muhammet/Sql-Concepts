@@ -10,8 +10,8 @@ drop view best3Reviews;
 CREATE VIEW best3Reviews AS
 SELECT u.USERID AS userID, u.NAME AS name, p.NAME AS smartphones.name, pt.team, pt.masterylevel --TODO change team and masterylevel
 FROM players p
-JOIN playerTeams pt ON p.playerId = pt.playerId
-JOIN heroes h ON pt.heroId = h.heroId JOIN matches m ON pt.matchId = m.matchId
+         JOIN playerTeams pt ON p.playerId = pt.playerId
+         JOIN heroes h ON pt.heroId = h.heroId JOIN matches m ON pt.matchId = m.matchId
 ORDER BY pt.masterylevel DESC FETCH FIRST 3 ROWS ONLY;
 
 GRANT SELECT ON top3 TO PUBLIC;
@@ -38,7 +38,7 @@ SET health = 200
 WHERE name = 'Mercy';
 -- voeg een attribuut toe aan de tabel
 ALTER TABLE heroes
-ADD ability VARCHAR2(100);
+    ADD ability VARCHAR2(100);
 select * from HEROES;
 alter table HEROES drop column ability;
 select * from HEROES;
