@@ -78,80 +78,79 @@ VALUES ((SELECT user_ID FROM users WHERE first_name = 'Olivier'),
 
 --------------------student 2
 
-
 -- Insert data into Brand table
-INSERT INTO Brand (brand_name, brand_founder, type, key_people, founding_date, address_id)
+INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
 VALUES ('Apple', 'Steve Jobs', 'Technology', 'Tim Cook',
-        TO_DATE('1976-04-01', 'YYYY-MM-DD'),
-        (SELECT address_id FROM Address WHERE zip = 54321 AND street = 'Apple Avenue 2' AND street_number = 200));
+        TO_DATE('01-04-1976', 'DD-MM-YYYY'),
+        (SELECT address_id FROM addresses WHERE zip = 54321 AND street = 'Apple Avenue 2' AND street_number = 200));
 
-INSERT INTO Brand (brand_name, brand_founder, type, key_people, founding_date, address_id)
+INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
 VALUES ('Google', 'Larry Page', 'Technology', 'Sundar Pichai',
-        TO_DATE('1998-09-04', 'YYYY-MM-DD'),
-        (SELECT address_id FROM Address WHERE zip = 98765 AND street = 'Google Drive 3' AND street_number = 300));
+        TO_DATE('04-09-1998', 'DD-MM-YYYY'),
+        (SELECT address_id FROM addresses WHERE zip = 98765 AND street = 'Google Drive 3' AND street_number = 300));
 
-INSERT INTO Brand (brand_name, brand_founder, type, key_people, founding_date, address_id)
+INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
 VALUES ('Amazon', 'Jeff Bezos', 'Technology', 'Jeff Bezos',
-        TO_DATE('1994-07-05', 'YYYY-MM-DD'),
-        (SELECT address_id FROM Address WHERE zip = 12345 AND street = 'Terry Avenue North' AND street_number = 410));
+        TO_DATE('05-07-1994', 'DD-MM-YYYY'),
+        (SELECT address_id FROM addresses WHERE zip = 12345 AND street = 'Terry Avenue North' AND street_number = 410));
 
-INSERT INTO Brand (brand_name, brand_founder, type, key_people, founding_date, address_id)
+INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
 VALUES ('Tesla', 'Elon Musk', 'Automotive', 'Elon Musk',
-        TO_DATE('2003-07-01', 'YYYY-MM-DD'),
-        (SELECT address_id FROM Address WHERE zip = 67890 AND street = 'Deer Creek Road' AND street_number = 3500));
+        TO_DATE('01-07-2003', 'DD-MM-YYYY'),
+        (SELECT address_id FROM addresses WHERE zip = 67890 AND street = 'Deer Creek Road' AND street_number = 3500));
 
-INSERT INTO Brand (brand_name, brand_founder, type, key_people, founding_date, address_id)
+INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
 VALUES ('Microsoft', 'Bill Gates', 'Technology', 'Satya Nadella',
-        TO_DATE('1975-04-04', 'YYYY-MM-DD'),
-        (SELECT address_id FROM Address WHERE zip = 13579 AND street = 'Microsoft Way' AND street_number = 1));
+        TO_DATE('04-04-1975', 'DD-MM-YYYY'),
+        (SELECT address_id FROM addresses WHERE zip = 13579 AND street = 'Microsoft Way' AND street_number = 1));
 
 -- Insert data into HQ_Adresses table
-INSERT INTO Address (zip, city, street_number, street)
+INSERT INTO addresses (zip, city, street_number, street)
 VALUES (12345, 'New York', 100, 'Broadway');
-INSERT INTO Address (zip, city, street_number, street)
+INSERT INTO addresses (zip, city, street_number, street)
 VALUES (54321, 'Los Angeles', 200, 'Hollywood Blvd');
-INSERT INTO Address (zip, city, street_number, street)
+INSERT INTO addresses (zip, city, street_number, street)
 VALUES (98765, 'Chicago', 300, 'Michigan Ave');
-INSERT INTO Address (zip, city, street_number, street)
+INSERT INTO addresses (zip, city, street_number, street)
 VALUES (11111, 'Houston', 400, 'Main St');
-INSERT INTO Address (zip, city, street_number, street)
+INSERT INTO addresses (zip, city, street_number, street)
 VALUES (22222, 'San Francisco', 500, 'Market St');
-INSERT INTO Address (zip, city, street_number, street)
+INSERT INTO addresses (zip, city, street_number, street)
 VALUES (54321, 'Cupertino', 200, 'Apple Avenue 2');
-INSERT INTO Address (zip, city, street_number, street)
+INSERT INTO addresses (zip, city, street_number, street)
 VALUES (98765, 'Mountain View', 300, 'Google Drive 3');
-INSERT INTO Address (zip, city, street_number, street)
+INSERT INTO addresses (zip, city, street_number, street)
 VALUES (12345, 'Palo Alto', 3500, 'Deer Creek Road');
-INSERT INTO Address (zip, city, street_number, street)
+INSERT INTO addresses (zip, city, street_number, street)
 VALUES (67890, 'Seattle', 410, 'Terry Avenue North');
-INSERT INTO Address (zip, city, street_number, street)
+INSERT INTO addresses (zip, city, street_number, street)
 VALUES (13579, 'Redmond', 1, 'Microsoft Way');
 
 
 -- Insert data into Brand_store table
-INSERT INTO Brand_store (brand_id, opening_date, employee_count, closing_date, address_id)
-VALUES ((SELECT brand_id FROM Brand WHERE brand_name = 'Apple'), TO_DATE('2010-01-01', 'YYYY-MM-DD'),
+INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date, address_id)
+VALUES ((SELECT brand_id FROM brands WHERE brand_name = 'Apple'), TO_DATE('01-01-2010', 'DD-MM-YYYY'),
         50,
-        NULL, (SELECT address_id FROM Address WHERE zip = 12345 AND street = 'Broadway' AND street_number = 100));
+        NULL, (SELECT address_id FROM addresses WHERE zip = 12345 AND street = 'Broadway' AND street_number = 100));
 
-INSERT INTO Brand_store (brand_id, opening_date, employee_count, closing_date, address_id)
-VALUES ((SELECT brand_id FROM Brand WHERE brand_name = 'Google'), TO_DATE('2001-05-15', 'YYYY-MM-DD'),
+INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date, address_id)
+VALUES ((SELECT brand_id FROM brands WHERE brand_name = 'Google'), TO_DATE('15-05-2001', 'DD-MM-YYYY'),
         100, NULL,
-        (SELECT address_id FROM Address WHERE zip = 54321 AND street = 'Hollywood Blvd' AND street_number = 200));
+        (SELECT address_id FROM addresses WHERE zip = 54321 AND street = 'Hollywood Blvd' AND street_number = 200));
 
-INSERT INTO Brand_store (brand_id, opening_date, employee_count, closing_date, address_id)
-VALUES ((SELECT brand_id FROM Brand WHERE brand_name = 'Amazon'), TO_DATE('2005-09-20', 'YYYY-MM-DD'),
+INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date, address_id)
+VALUES ((SELECT brand_id FROM brands WHERE brand_name = 'Amazon'), TO_DATE('20-09-2005', 'DD-MM-YYYY'),
         75,
-        NULL, (SELECT address_id FROM Address WHERE zip = 98765 AND street = 'Michigan Ave' AND street_number = 300));
-INSERT INTO Brand_store (brand_id, opening_date, employee_count, closing_date, address_id)
-VALUES ((SELECT brand_id FROM Brand WHERE brand_name = 'Tesla'), TO_DATE('1995-11-10', 'YYYY-MM-DD'),
+        NULL, (SELECT address_id FROM addresses WHERE zip = 98765 AND street = 'Michigan Ave' AND street_number = 300));
+INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date, address_id)
+VALUES ((SELECT brand_id FROM brands WHERE brand_name = 'Tesla'), TO_DATE('10-11-1995', 'DD-MM-YYYY'),
         80, NULL,
-        (SELECT address_id FROM Address WHERE zip = 11111 AND street = 'Main St' AND street_number = 400));
+        (SELECT address_id FROM addresses WHERE zip = 11111 AND street = 'Main St' AND street_number = 400));
 
-INSERT INTO Brand_store (brand_id, opening_date, employee_count, closing_date, address_id)
-VALUES ((SELECT brand_id FROM Brand WHERE brand_name = 'Microsoft'), TO_DATE('2012-03-25', 'YYYY-MM-DD'),
+INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date, address_id)
+VALUES ((SELECT brand_id FROM brands WHERE brand_name = 'Microsoft'), TO_DATE('25-03-2012', 'DD-MM-YYYY'),
         60,
-        NULL, (SELECT address_id FROM Address WHERE zip = 22222 AND street = 'Market St' AND street_number = 500));
+        NULL, (SELECT address_id FROM addresses WHERE zip = 22222 AND street = 'Market St' AND street_number = 500));
 
 -- Insert data into Promotion table
 INSERT INTO Promotion (promotion_id, discount, name, start_date, end_date)
