@@ -206,6 +206,7 @@ VALUES (TO_DATE('29-11-2024', 'DD-MM-YYYY'), (SELECT phone_ID FROM smartphones W
          WHERE address_id =
                (SELECT address_id FROM ADDRESSES WHERE zip = 22222 AND street = 'Market St' AND street_number = 500)),
         'Eve Wilson', TO_DATE('10-04-2024', 'DD-MM-YYYY'));
+COMMIT ;
 
 
 
