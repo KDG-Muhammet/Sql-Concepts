@@ -35,7 +35,7 @@ Domeinen - constraints
 --- 
     S1
 - Review: rating: 0-5
-- Website: format: www.\***.\*** / https\://www.\***.\***
+- Website: format: www.\***.\***
 
 
     S2
