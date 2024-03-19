@@ -1,13 +1,13 @@
 --Create Users
-CREATE USER Gloria IDENTIFIED BY Password123;
+CREATE USER Gloria IDENTIFIED BY Password1234;
 GRANT CREATE SESSION TO Gloria;
 GRANT SELECT, INSERT, UPDATE, DELETE, ALTER ON smartphones TO Gloria WITH GRANT OPTION;
-grant create any trigger, Alter any trigger to Gloria;
-
---Create Views
-drop view best3;
+GRANT CREATE ANY TRIGGER, ALTER ANY TRIGGER TO Gloria;
+GRANT SELECT, UPDATE (RATING) ON reviews TO Gloria;
+--Create View
+--drop view best3;
 CREATE VIEW best3 AS
-SELECT u.USER_ID AS userID, u.FIRST_NAME AS userfirstname, p.NAME AS phonename, r.RATING --TODO change team and masterylevel
+SELECT u.USER_ID AS userID, u.FIRST_NAME AS userfirstname, p.NAME AS phonename, r.RATING
 FROM users u
          JOIN reviews r ON u.USER_ID = r.review_user_ID
          JOIN smartphones p ON r.REVIEW_PHONE_ID = p.PHONE_ID JOIN websites w ON r.WEBSITE_ID = w.WEBSITE_ID
@@ -42,3 +42,4 @@ select * from WEBSITES;
 alter table WEBSITES
     drop column first_online;
 select * from WEBSITES;
+COMMIT;

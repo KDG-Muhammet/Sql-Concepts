@@ -11,7 +11,7 @@ CREATE TABLE websites (
                           mobile_app CHAR(1), --Boolean
                           server_country VARCHAR2(25),
                           CONSTRAINT WEBSITE_ID PRIMARY KEY (website_ID),
-                          CONSTRAINT WEB_ADDRESS CHECK (REGEXP_LIKE(:NEW.web_address, '^www\.[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'))
+                          CONSTRAINT WEB_ADDRESS CHECK (REGEXP_LIKE(web_address, '^www\.[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'))
 );
 
 
