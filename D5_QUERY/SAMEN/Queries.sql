@@ -33,11 +33,21 @@ VALUES (1,1,6,to_date('19-03-2024','DD-MM-YYYY'), 1, 'Test Review', 'Test Conten
 --S2
 -- query 2 niveaus diep
 
-SELECT brand_name, opening_date as brand_store_opening_date, employee_count , sale_date
+SELECT brand_name, opening_date as brand_store_opening_date, employee_count , sale_date, p.name as name_promotion, DISCOUNT
 FROM Brands b
 JOIN Brand_stores bs ON b.brand_id = bs.brand_id
 JOIN Sales s ON bs.store_id = s.store_id
+JOIN PROMOTIONS p on s.PROMOTION_ID = p.PROMOTION_ID
 ORDER BY brand_name;
+
+-- query brand_store address sale
+
+SELECT city, STREET, STREET_NUMBER, opening_date as brand_store_opening_date, employee_count , sale_date
+FROM ADDRESSES a
+         JOIN BRAND_STORES bs ON a.ADDRESS_ID = bs.ADDRESS_ID
+         JOIN Sales s ON bs.store_id = s.store_id
+ORDER BY CITY;
+
 
 -- bewijs contraints
 
