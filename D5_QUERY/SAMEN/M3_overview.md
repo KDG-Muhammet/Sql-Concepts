@@ -20,11 +20,11 @@ Milestone 3: Creatie Databank en Security
 
 Queries
 --- 
-    S1 @query 1: GAMESTUDIO - COMPUTERGAMES (B/X) - PLAYERS (A) - GAMESESSIONS (D) 
-![S1_query1_studios_games_players.png](screenshots%2FS1_query1_studios_games_players.png)
+    S1 @query 1: USERS (A) - REVIEWS (D) - SMARTPHONES (B)
+![S1_query1_users_reviews_smartphones.png](screenshots%2FS1_query1_users_reviews_smartphones.png)
 
-    S1 @query 2: PLAYER (A) - GAMESERVERS (C)
-![S1_query3_gameservers.png](screenshots%2FS1_query3_gameservers.png)
+    S1 @query 2: USERS (A) - REVIEWS (D) - WEBSITES (C)
+![S1_query2_users_reviews_websites.png](screenshots%2FS1_query2_users_reviews_websites.png)
 
     S2 @query 1: brands (X) - brand_stores (Y) - sale (Z) - promotion (W)
 ![S2_query1_brands_sales.png](screenshots%2FS2_query1_brands_sales.png)
@@ -36,13 +36,13 @@ Bewijs Domeinen - constraints M2
 --- 
 
     S1
-- Player: zipcodes - minimum 4 characters
+- Website: web_address like www.\***.\***
 
-![S1_bewijs_zipcodes.png](screenshots%2FS1_bewijs_zipcodes.png)
+![S1_bewijs_web_address_format.png](screenshots%2FS1_bewijs_web_address_format.png)
 
-- Computergame: release_date < last_updated
+- Reviews: rating: 0-5
 
-![S1_bewijs_computergames_date.png](screenshots%2FS1_bewijs_computergames_date.png)
+![S1_bewijs_rating.png](screenshots%2FS1_bewijs_rating.png)
 
     S2
 - Promotion: discount <= 100
@@ -58,7 +58,7 @@ Security
 ---
     S1: 
 - view 
-![1_view_top3.png](screenshots/S1_view_top3.png)
+![S1_view_best3.png](screenshots/S1_view_best3.png)
 
     S2
 - view

@@ -35,17 +35,21 @@ SELECT * FROM best3Reviews;
 UPDATE smartphones
 SET SCREEN_DIAGONAL = 6.9
 WHERE name = 'Samsung A52';
+COMMIT;
+SELECT * FROM SMARTPHONES WHERE NAME = 'Samsung A52';
+
 --Change back to original
 UPDATE SMARTPHONES
 SET SCREEN_DIAGONAL = 6.3
 WHERE name = 'Samsung A52';
-
+COMMIT;
+SELECT * FROM SMARTPHONES WHERE NAME = 'Samsung A52';
 
 -- voeg een attribuut toe aan de tabel
-ALTER TABLE WEBSITES
-    ADD first_online DATE;
-select * from WEBSITES;
-alter table WEBSITES
-    drop column first_online;
-select * from WEBSITES;
+ALTER TABLE SMARTPHONES
+    ADD first_announced DATE;
+select * from SMARTPHONES;
+alter table SMARTPHONES
+    drop column first_announced;
+select * from SMARTPHONES;
 COMMIT;
