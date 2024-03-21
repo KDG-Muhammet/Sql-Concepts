@@ -94,9 +94,9 @@ VALUES (54321, 'Cupertino', 200, 'Apple Avenue 2');
 INSERT INTO addresses (zip, city, street_number, street)
 VALUES (98765, 'Mountain View', 300, 'Google Drive 3');
 INSERT INTO addresses (zip, city, street_number, street)
-VALUES (12345, 'Palo Alto', 3500, 'Deer Creek Road');
+VALUES (13509, 'Seoul', 129, 'Samsung-ro');
 INSERT INTO addresses (zip, city, street_number, street)
-VALUES (67890, 'Seattle', 410, 'Terry Avenue North');
+VALUES (518129, 'Shenzhen', 1, 'Bantian Street');
 INSERT INTO addresses (zip, city, street_number, street)
 VALUES (13579, 'Redmond', 1, 'Microsoft Way');
 
@@ -113,14 +113,14 @@ VALUES ('Google', 'Larry Page', 'Technology', 'Sundar Pichai',
         (SELECT address_id FROM addresses WHERE zip = 98765 AND street = 'Google Drive 3' AND street_number = 300));
 
 INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
-VALUES ('Amazon', 'Jeff Bezos', 'Technology', 'Jeff Bezos',
-        TO_DATE('05-07-1994', 'DD-MM-YYYY'),
-        (SELECT address_id FROM addresses WHERE zip = 12345 AND street = 'Terry Avenue North' AND street_number = 3500));
+VALUES ('Samsung', 'Lee Byung-chul', 'Technology', 'Kim Ki-nam',
+        TO_DATE('01-03-1983', 'DD-MM-YYYY'),
+        (SELECT address_id FROM addresses WHERE zip = 13509 AND street = 'Samsung-ro' AND street_number = 129));
 
 INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
-VALUES ('Tesla', 'Elon Musk', 'Automotive', 'Elon Musk',
-        TO_DATE('01-07-2003', 'DD-MM-YYYY'),
-        (SELECT address_id FROM addresses WHERE zip = 67890 AND street = 'Deer Creek Road' AND street_number = 410));
+VALUES ('Huawei', 'Ren Zhengfei', 'Technology', 'Guo Ping',
+        TO_DATE('15-09-1987', 'DD-MM-YYYY'),
+        (SELECT address_id FROM addresses WHERE zip = 518129 AND street = 'Bantian Street' AND street_number =  1));
 
 INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
 VALUES ('Microsoft', 'Bill Gates', 'Technology', 'Satya Nadella',
@@ -139,11 +139,11 @@ VALUES ((SELECT brand_id FROM brands WHERE brand_name = 'Google'), TO_DATE('15-0
         (SELECT address_id FROM addresses WHERE zip = 54321 AND street = 'Hollywood Blvd' AND street_number = 200));
 
 INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date, address_id)
-VALUES ((SELECT brand_id FROM brands WHERE brand_name = 'Amazon'), TO_DATE('20-09-2005', 'DD-MM-YYYY'),
+VALUES ((SELECT brand_id FROM brands WHERE brand_name = 'Samsung'), TO_DATE('20-09-2005', 'DD-MM-YYYY'),
         75,
         NULL, (SELECT address_id FROM addresses WHERE zip = 98765 AND street = 'Michigan Ave' AND street_number = 300));
 INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date, address_id)
-VALUES ((SELECT brand_id FROM brands WHERE brand_name = 'Tesla'), TO_DATE('10-11-1995', 'DD-MM-YYYY'),
+VALUES ((SELECT brand_id FROM brands WHERE brand_name = 'Huawei'), TO_DATE('10-11-1995', 'DD-MM-YYYY'),
         80, NULL,
         (SELECT address_id FROM addresses WHERE zip = 11111 AND street = 'Main St' AND street_number = 400));
 
@@ -179,19 +179,19 @@ VALUES (TO_DATE('24-12-2024', 'DD-MM-YYYY'), (SELECT phone_ID FROM smartphones W
          WHERE address_id =
                (SELECT address_id
                 FROM ADDRESSES
-                WHERE zip = 54321
-                  AND street = 'Hollywood Blvd'
-                  AND street_number = 200)),
+                WHERE zip = 12345
+                  AND street = 'Broadway'
+                  AND street_number = 100)),
         'Jane Smith', TO_DATE('05-09-2023', 'DD-MM-YYYY'));
 INSERT INTO SALES (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
-VALUES (TO_DATE( '10-07-2024', 'DD-MM-YYYY'), (SELECT phone_ID FROM smartphones WHERE name = 'iPhone 15'), (SELECT promotion_id FROM PROMOTIONS WHERE name = 'Holiday Special'),
+VALUES (TO_DATE( '10-07-2024', 'DD-MM-YYYY'), (SELECT phone_ID FROM smartphones WHERE name = 'Samsung A52'), (SELECT promotion_id FROM PROMOTIONS WHERE name = 'Holiday Special'),
         (SELECT store_id
          FROM BRAND_STORES
          WHERE address_id =
                (SELECT address_id FROM ADDRESSES WHERE zip = 98765 AND street = 'Michigan Ave' AND street_number = 300)),
         'Alice Johnson', TO_DATE('20-12-2023', 'DD-MM-YYYY'));
 INSERT INTO SALES (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
-VALUES (TO_DATE('30-12-2024', 'DD-MM-YYYY'), (SELECT phone_ID FROM smartphones WHERE name = 'iPhone 15'),
+VALUES (TO_DATE('30-12-2024', 'DD-MM-YYYY'), (SELECT phone_ID FROM smartphones WHERE name = 'Huawei 7'),
         (SELECT promotion_id FROM PROMOTIONS WHERE name = 'New Year Discount'),
         (SELECT store_id
          FROM BRAND_STORES
@@ -204,7 +204,7 @@ VALUES (TO_DATE('29-11-2024', 'DD-MM-YYYY'), (SELECT phone_ID FROM smartphones W
         (SELECT store_id
          FROM BRAND_STORES
          WHERE address_id =
-               (SELECT address_id FROM ADDRESSES WHERE zip = 22222 AND street = 'Market St' AND street_number = 500)),
+               (SELECT address_id FROM ADDRESSES WHERE zip = 12345 AND street = 'Broadway' AND street_number = 100)),
         'Eve Wilson', TO_DATE('10-04-2024', 'DD-MM-YYYY'));
 COMMIT ;
 

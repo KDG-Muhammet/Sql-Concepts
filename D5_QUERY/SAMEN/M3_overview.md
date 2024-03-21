@@ -30,7 +30,7 @@ Queries
 ![S2_query1_brands_sales.png](screenshots%2FS2_query1_brands_sales.png)
 
     S2 @query 2: brands (x) - Adresses
-![S1_query2_player_locations.png](screenshots%2FS1_query2_player_locations.png)
+![S2_query2_brands_addresses.png](screenshots%2FS2_query2_brands_addresses.png)
 
 Bewijs Domeinen - constraints M2
 --- 
