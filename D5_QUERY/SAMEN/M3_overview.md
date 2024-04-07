@@ -60,26 +60,37 @@ Security
 - view 
 ![S1_view_best3.png](screenshots/S1_view_best3.png)
 
+- Username
+  ![username.png](screenshots/username.png)
+
+- overzicht system privileges
+  ![dict_tab_privs.png](screenshots/dict_tab_privs.png)
+
+
     S2
 - view
 ![S2_view_WXYZ.png](screenshots/S2_view_WXYZ.png)   
 
 - Username
-![username.png](screenshots/username.png)
+![S2_username.png](screenshots/S2_username.png)
 
 - overzicht system privileges
-![dict_tab_privs.png](screenshots/dict_tab_privs.png)
+![S2_dict_tab_privs.png](screenshots/S2_dict_tab_privs.png)
 
 
-- S1: 
+    S1: 
 - Synonym
 ![S1_bewijs_Syn.png](screenshots/S1_bewijs_Syn.png)
+- 
 - DML
 ![S1_bewijs_DML_1.png](screenshots/S1_bewijs_DML_1.png)
 ![S1_bewijs_DML_2.png](screenshots/S1_bewijs_DML_2.png)
+- 
 - DDL
 ![S1_bewijs_DDL_1.png](screenshots/S1_bewijs_DDL_1.png)
 ![S1_bewijs_DDL_2.png](screenshots/S1_bewijs_DDL_2.png)
 
-- S2:
+
+    S2:
+- bewijs insert Key Presserved
 ![S2_bewijs_insertKeyPresserved.png](screenshots/S2_bewijs_insertKeyPresserved.png)
