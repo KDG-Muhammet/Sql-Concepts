@@ -33,7 +33,7 @@ INSERT INTO users (first_name, last_name, email, phone_number, birthdate)
 VALUES ('Kristof', 'Van de Walle', 'kristofvdwalle@hotmail.com', 0470534458, to_date('21-12-2002', 'DD-MM-YYYY'));
 INSERT INTO users (first_name, last_name, email, phone_number, birthdate)
 VALUES ('Michiel', 'Gilissen', 'michiel.gilissen@gmail.com', 0493089725, to_date('08-08-2003', 'DD-MM-YYYY'));
-
+COMMIT;
 --GENERATION REVIEW DATA
 INSERT INTO reviews
 VALUES ((SELECT user_ID FROM users WHERE first_name = 'Gloria'),
@@ -96,7 +96,7 @@ VALUES (98765, 'Mountain View', 300, 'Google Drive 3');
 INSERT INTO addresses (zip, city, street_number, street)
 VALUES (13509, 'Seoul', 129, 'Samsung-ro');
 INSERT INTO addresses (zip, city, street_number, street)
-VALUES (518129, 'Shenzhen', 1, 'Bantian Street');
+VALUES (51812, 'Shenzhen', 1, 'Bantian Street');
 INSERT INTO addresses (zip, city, street_number, street)
 VALUES (13579, 'Redmond', 1, 'Microsoft Way');
 
@@ -120,7 +120,7 @@ VALUES ('Samsung', 'Lee Byung-chul', 'Technology', 'Kim Ki-nam',
 INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
 VALUES ('Huawei', 'Ren Zhengfei', 'Technology', 'Guo Ping',
         TO_DATE('15-09-1987', 'DD-MM-YYYY'),
-        (SELECT address_id FROM addresses WHERE zip = 518129 AND street = 'Bantian Street' AND street_number =  1));
+        (SELECT address_id FROM addresses WHERE zip = 51812 AND street = 'Bantian Street' AND street_number =  1));
 
 INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
 VALUES ('Microsoft', 'Bill Gates', 'Technology', 'Satya Nadella',
