@@ -1,0 +1,46 @@
+CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
+
+PROCEDURE empty_tables_S1 IS
+BEGIN
+
+    FOR all_constraints in (select table_name , constraint_name from user_constraints where constraint_type = 'R' AND OWNER = 'PROJECT' AND STATUS = 'ENABLED')
+        LOOP
+            EXECUTE IMMEDIATE 'ALTER TABLE ' || all_constraints.table_name || ' DISABLE CONSTRAINT ' || all_constraints.constraint_name;
+        END LOOP;
+
+    EXECUTE IMMEDIATE 'TRUNCATE TABLE REVIEWS CASCADE';
+    EXECUTE IMMEDIATE 'TRUNCATE TABLE SALES CASCADE';
+    EXECUTE IMMEDIATE 'ALTER TABLE SALES MODIFY(SALE_ID GENERATED AS IDENTITY (START WITH 1))';
+    EXECUTE IMMEDIATE 'TRUNCATE TABLE USERS CASCADE';
+    EXECUTE IMMEDIATE 'ALTER TABLE USERS MODIFY(USER_ID GENERATED AS IDENTITY (START WITH 1))';
+    EXECUTE IMMEDIATE 'TRUNCATE TABLE SMARTPHONES CASCADE';
+    EXECUTE IMMEDIATE 'ALTER TABLE SMARTPHONES MODIFY(PHONE_ID GENERATED AS IDENTITY (START WITH 1))';
+    EXECUTE IMMEDIATE 'TRUNCATE TABLE WEBSITES CASCADE';
+    EXECUTE IMMEDIATE 'ALTER TABLE WEBSITES MODIFY(WEBSITE_ID GENERATED AS IDENTITY (START WITH 1))';
+    EXECUTE IMMEDIATE 'PURGE RECYCLEBIN';
+
+    for all_constraints in (select table_name , constraint_name from user_constraints where constraint_type = 'R' AND OWNER = 'PROJECT' AND STATUS = 'DISABLED')
+        LOOP
+            EXECUTE IMMEDIATE 'ALTER TABLE ' || all_constraints.table_name || ' ENABLE CONSTRAINT ' || all_constraints.constraint_name;
+        END LOOP;
+
+    IF (SELECT object_name, object_type FROM DBA_OBJECTS WHERE status = 'INVALID' AND owner = 'PROJECT') THEN
+        EXECUTE IMMEDIATE 'ALTER PACKAGE PROJECT.PKG_S1_smartphones COMPILE BODY';
+    END IF;
+
+
+
+END empty_tables_S1;
+
+PROCEDURE add_smartphone IS
+BEGIN
+
+END add_smartphone;
+
+PROCEDURE add_ IS
+BEGIN
+
+END add_smartphone;
+
+END PKG_S1_smartphones;
+
