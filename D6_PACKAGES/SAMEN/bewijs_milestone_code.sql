@@ -11,8 +11,10 @@ SELECT 'S2_  : addresses',              (SELECT COUNT(*) FROM addresses         
 
 BEGIN
     --S1
+    PKG_S1_smartphones.empty_tables_s1();
+    PKG_S1_SMARTPHONES.bewijs_milestone_M4_S1();
 
-    --S1
+    --S2
     PKG_S2_smartphones.empty_tables_s2();
     PKG_S2_SMARTPHONES.bewijs_milestone_M4_S2();
 
