@@ -24,9 +24,17 @@ BEGIN
             EXECUTE IMMEDIATE 'ALTER TABLE ' || all_constraints.table_name || ' ENABLE CONSTRAINT ' || all_constraints.constraint_name;
         END LOOP;
 
-    IF (SELECT object_name, object_type FROM DBA_OBJECTS WHERE status = 'INVALID' AND owner = 'PROJECT') THEN
-        EXECUTE IMMEDIATE 'ALTER PACKAGE PROJECT.PKG_S1_smartphones COMPILE BODY';
-    END IF;
+    DECLARE
+        v_invalid_count NUMBER;
+    BEGIN
+        SELECT COUNT(*) INTO v_invalid_count
+        FROM DBA_OBJECTS
+        WHERE status = 'INVALID' AND owner = 'PROJECT';
+
+        IF v_invalid_count > 0 THEN
+            EXECUTE IMMEDIATE 'ALTER PACKAGE PROJECT.PKG_S1_smartphones COMPILE BODY';
+        END IF;
+    END;
 
 
 
