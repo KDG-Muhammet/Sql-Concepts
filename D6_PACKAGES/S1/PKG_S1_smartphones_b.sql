@@ -24,24 +24,22 @@ BEGIN
             EXECUTE IMMEDIATE 'ALTER TABLE ' || all_constraints.table_name || ' ENABLE CONSTRAINT ' || all_constraints.constraint_name;
         END LOOP;
 
-    DECLARE
-        v_invalid_count NUMBER;
+    /*DECLARE
+        v_invalid_objects NUMBER;
     BEGIN
-        SELECT COUNT(*) INTO v_invalid_count
-        FROM DBA_OBJECTS
-        WHERE status = 'INVALID' AND owner = 'PROJECT';
+        SELECT COUNT(*) INTO v_invalid_objects FROM DBA_OBJECTS WHERE status = 'INVALID' AND owner = 'PROJECT';
 
-        IF v_invalid_count > 0 THEN
+        IF (1 > 0) THEN
             EXECUTE IMMEDIATE 'ALTER PACKAGE PROJECT.PKG_S1_smartphones COMPILE BODY';
         END IF;
-    END;
+    END;*/
 
 
 
 END empty_tables_S1;
 
     PROCEDURE add_smartphone(p_name IN VARCHAR2, p_releasedate IN DATE,
-                             p_screendiagonal IN NUMBER(3,2), p_cameraamount IN NUMBER,
+                             p_screendiagonal IN NUMBER, p_cameraamount IN NUMBER,
                              p_processorcores IN NUMBER, p_memory IN NUMBER,
                              p_storage IN NUMBER) IS
     BEGIN
