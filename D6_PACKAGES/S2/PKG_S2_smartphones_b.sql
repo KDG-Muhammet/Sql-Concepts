@@ -7,8 +7,13 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         EXECUTE IMMEDIATE 'TRUNCATE TABLE BRANDS';
         EXECUTE IMMEDIATE 'TRUNCATE TABLE PROMOTIONS';
         EXECUTE IMMEDIATE 'TRUNCATE TABLE ADDRESSES';
+        EXECUTE IMMEDIATE 'ALTER TABLE SALES MODIFY (sale_id GENERATED ALWAYS AS IDENTITY (START WITH 1))';
+        EXECUTE IMMEDIATE 'ALTER TABLE BRAND_STORES MODIFY (store_id GENERATED ALWAYS AS IDENTITY (START WITH 1))';
+        EXECUTE IMMEDIATE 'ALTER TABLE BRANDS MODIFY (brand_id GENERATED ALWAYS AS IDENTITY (START WITH 1))';
+        EXECUTE IMMEDIATE 'ALTER TABLE ADDRESSES MODIFY (address_id GENERATED ALWAYS AS IDENTITY (START WITH 1))';
+        EXECUTE IMMEDIATE 'PURGE RECYCLEBIN';
 
-        COMMIT;
+
     END empty_tables_s2;
 
     FUNCTION lookup_brand_id(p_brand_name IN VARCHAR2) RETURN NUMBER AS
@@ -114,20 +119,22 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
 
     END add_promotion;
 
-    PROCEDURE add_sale(p_due_dates IN DATE, p_phone_name IN VARCHAR2, p_promotion_name IN VARCHAR2,
+    PROCEDURE add_sale(p_due_dates IN DATE, p_phonename IN VARCHAR2, p_memory IN NUMBER, p_storage IN NUMBER, p_promotion_name IN VARCHAR2,
                        p_store_address_zip IN NUMBER, p_store_address_street IN VARCHAR2,
                        p_store_address_street_number IN NUMBER, p_name IN VARCHAR2, p_sale_date IN DATE) AS
 
         ln_promotion_id INTEGER;
         ln_store_id     INTEGER;
+        ls_phone_id     INTEGER;
 
     BEGIN
 
         ln_promotion_id := lookup_promotion_id(p_promotion_name);
         ln_store_id := lookup_store_id(p_store_address_zip, p_store_address_street, p_store_address_street_number);
+        ls_phone_id := PKG_S1_smartphones.lookup_smartphone(p_phonename, p_memory, p_storage);
 
         INSERT INTO sales (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
-        VALUES (p_due_dates, (SELECT phone_ID FROM smartphones WHERE name = p_phone_name),
+        VALUES (p_due_dates, ls_phone_id,
                 ln_promotion_id,
                 ln_store_id,
                 p_name, p_sale_date);
@@ -198,19 +205,19 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         COMMIT;
 
         -- Insert data into Sale table
-        add_sale(TO_DATE('05-08-2024', 'DD-MM-YYYY'), 'iPhone 15', 'Summer Sale', 12345, 'Broadway', 100, 'John Doe',
+        add_sale(TO_DATE('05-08-2024', 'DD-MM-YYYY'), 'iPhone 15', 32, 512, 'Summer Sale', 12345, 'Broadway', 100, 'John Doe',
                  TO_DATE('15-06-2023', 'DD-MM-YYYY'));
 
-        add_sale(TO_DATE('24-12-2024', 'DD-MM-YYYY'), 'iPhone 15', 'Back to School', 12345, 'Broadway', 100,
+        add_sale(TO_DATE('24-12-2024', 'DD-MM-YYYY'), 'iPhone 15', 32, 512, 'Back to School', 12345, 'Broadway', 100,
                  'Jane Smith', TO_DATE('05-09-2023', 'DD-MM-YYYY'));
 
-        add_sale(TO_DATE('10-07-2024', 'DD-MM-YYYY'), 'Samsung A52', 'Holiday Special', 98765, 'Michigan Ave', 300,
+        add_sale(TO_DATE('10-07-2024', 'DD-MM-YYYY'), 'Samsung A52', 16, 256, 'Holiday Special', 98765, 'Michigan Ave', 300,
                  'Alice Johnson', TO_DATE('20-12-2023', 'DD-MM-YYYY'));
 
-        add_sale(TO_DATE('30-12-2024', 'DD-MM-YYYY'), 'Huawei 7', 'New Year Discount', 11111, 'Main St', 400,
+        add_sale(TO_DATE('30-12-2024', 'DD-MM-YYYY'), 'Huawei 7',4, 64, 'New Year Discount', 11111, 'Main St', 400,
                  'Bob Brown', TO_DATE('10-01-2024', 'DD-MM-YYYY'));
 
-        add_sale(TO_DATE('29-11-2024', 'DD-MM-YYYY'), 'iPhone 15', 'Spring Clearance', 12345, 'Broadway', 100,
+        add_sale(TO_DATE('29-11-2024', 'DD-MM-YYYY'), 'iPhone 15', 32, 512, 'Spring Clearance', 12345, 'Broadway', 100,
                  'Eve Wilson', TO_DATE('10-04-2024', 'DD-MM-YYYY'));
         COMMIT;
 
