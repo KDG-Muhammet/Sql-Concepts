@@ -1,28 +1,28 @@
 CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
 
-PROCEDURE empty_tables_S1 IS
-BEGIN
+    PROCEDURE empty_tables_S1 IS
+    BEGIN
 
-    FOR all_constraints in (select table_name , constraint_name from user_constraints where constraint_type = 'R' AND OWNER = 'PROJECT' AND STATUS = 'ENABLED')
-        LOOP
-            EXECUTE IMMEDIATE 'ALTER TABLE ' || all_constraints.table_name || ' DISABLE CONSTRAINT ' || all_constraints.constraint_name;
-        END LOOP;
+        FOR all_constraints in (select table_name , constraint_name from user_constraints where constraint_type = 'R' AND OWNER = 'PROJECT' AND STATUS = 'ENABLED')
+            LOOP
+                EXECUTE IMMEDIATE 'ALTER TABLE ' || all_constraints.table_name || ' DISABLE CONSTRAINT ' || all_constraints.constraint_name;
+            END LOOP;
 
-    EXECUTE IMMEDIATE 'TRUNCATE TABLE REVIEWS CASCADE';
-    EXECUTE IMMEDIATE 'TRUNCATE TABLE SALES CASCADE';
-    EXECUTE IMMEDIATE 'ALTER TABLE SALES MODIFY(SALE_ID GENERATED AS IDENTITY (START WITH 1))';
-    EXECUTE IMMEDIATE 'TRUNCATE TABLE USERS CASCADE';
-    EXECUTE IMMEDIATE 'ALTER TABLE USERS MODIFY(USER_ID GENERATED AS IDENTITY (START WITH 1))';
-    EXECUTE IMMEDIATE 'TRUNCATE TABLE SMARTPHONES CASCADE';
-    EXECUTE IMMEDIATE 'ALTER TABLE SMARTPHONES MODIFY(PHONE_ID GENERATED AS IDENTITY (START WITH 1))';
-    EXECUTE IMMEDIATE 'TRUNCATE TABLE WEBSITES CASCADE';
-    EXECUTE IMMEDIATE 'ALTER TABLE WEBSITES MODIFY(WEBSITE_ID GENERATED AS IDENTITY (START WITH 1))';
-    EXECUTE IMMEDIATE 'PURGE RECYCLEBIN';
+        EXECUTE IMMEDIATE 'TRUNCATE TABLE REVIEWS CASCADE';
+        EXECUTE IMMEDIATE 'TRUNCATE TABLE SALES CASCADE';
+        EXECUTE IMMEDIATE 'ALTER TABLE SALES MODIFY(SALE_ID GENERATED AS IDENTITY (START WITH 1))';
+        EXECUTE IMMEDIATE 'TRUNCATE TABLE USERS CASCADE';
+        EXECUTE IMMEDIATE 'ALTER TABLE USERS MODIFY(USER_ID GENERATED AS IDENTITY (START WITH 1))';
+        EXECUTE IMMEDIATE 'TRUNCATE TABLE SMARTPHONES CASCADE';
+        EXECUTE IMMEDIATE 'ALTER TABLE SMARTPHONES MODIFY(PHONE_ID GENERATED AS IDENTITY (START WITH 1))';
+        EXECUTE IMMEDIATE 'TRUNCATE TABLE WEBSITES CASCADE';
+        EXECUTE IMMEDIATE 'ALTER TABLE WEBSITES MODIFY(WEBSITE_ID GENERATED AS IDENTITY (START WITH 1))';
+        EXECUTE IMMEDIATE 'PURGE RECYCLEBIN';
 
-    for all_constraints in (select table_name , constraint_name from user_constraints where constraint_type = 'R' AND OWNER = 'PROJECT' AND STATUS = 'DISABLED')
-        LOOP
-            EXECUTE IMMEDIATE 'ALTER TABLE ' || all_constraints.table_name || ' ENABLE CONSTRAINT ' || all_constraints.constraint_name;
-        END LOOP;
+        for all_constraints in (select table_name , constraint_name from user_constraints where constraint_type = 'R' AND OWNER = 'PROJECT' AND STATUS = 'DISABLED')
+            LOOP
+                EXECUTE IMMEDIATE 'ALTER TABLE ' || all_constraints.table_name || ' ENABLE CONSTRAINT ' || all_constraints.constraint_name;
+            END LOOP;
 
     /*DECLARE
         v_invalid_objects NUMBER;
@@ -158,6 +158,39 @@ END empty_tables_S1;
             'Just bought the newest iPhone, very happy as transfers from my iPhone 14 were flawless. Edit: After a year and a half of usage it is due for an upgrade, as it is already slowing down',
             124, 5, to_date('23-12-2023', 'DD-MM-YYYY'));
     END bewijs_milestone_M4_S1;
+
+    FUNCTION random_number(p_min IN NUMBER, p_max IN NUMBER) RETURN NUMBER AS v_int NUMBER;
+    BEGIN
+        v_int := TRUNC(DBMS_RANDOM.VALUE(p_min, p_max));
+        RETURN v_int;
+    END random_number;
+
+    FUNCTION random_date(p_min IN DATE, p_max IN DATE) RETURN DATE AS v_date DATE;
+    v_diff NUMBER;
+    BEGIN
+        --random date in the last year
+        v_diff := TRUNC(p_max) - TRUNC(p_min);
+        v_date := TRUNC(p_min) + TRUNC(random_number(0, v_diff+1));
+        RETURN v_date;
+    END random_date;
+
+    FUNCTION random_element(p_elements SYS.ODCIVARCHAR2LIST) RETURN VARCHAR2 AS v_element VARCHAR2;
+        v_size NUMBER;
+        v_random_index NUMBER;
+        BEGIN
+            v_size := p_elements.COUNT;
+            v_random_index := random_number(1, v_size + 1);
+            RETURN p_elements(v_random_index);
+    END random_element;
+
+    FUNCTION timestamp_diff(a timestamp, b timestamp)
+        RETURN NUMBER IS
+    BEGIN
+        RETURN EXTRACT (day    from (a-b))*24*60*60 +
+               EXTRACT (hour   from (a-b))*60*60+
+               EXTRACT (minute from (a-b))*60+
+               EXTRACT (second from (a-b));
+    END;
 
 END PKG_S1_smartphones;
 
