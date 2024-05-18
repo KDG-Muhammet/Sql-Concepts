@@ -225,9 +225,29 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
     END bewijs_milestone_M4_S2;
 
 
+    FUNCTION get_random_address_id(used_address_ids IN OUT NOCOPY SYS.ODCINUMBERLIST) RETURN NUMBER IS
+        v_address_id NUMBER;
+    BEGIN
+        LOOP
+            SELECT address_id
+            INTO v_address_id
+            FROM (SELECT address_id FROM addresses ORDER BY DBMS_RANDOM.VALUE)
+            WHERE ROWNUM = 1;
 
+            -- Controleer of het address_id al gebruikt is
+            IF v_address_id NOT IN (SELECT COLUMN_VALUE FROM TABLE(used_address_ids)) THEN
+                EXIT;
+            END IF;
+        END LOOP;
 
+        used_address_ids.EXTEND;
+        used_address_ids(used_address_ids.COUNT) := v_address_id;
 
+        RETURN v_address_id;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            RETURN NULL;
+    END get_random_address_id;
 
 
     PROCEDURE generate_addresses(p_count IN NUMBER) IS
@@ -271,29 +291,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
 
             END LOOP;
     END generate_brands;
---
---     PROCEDURE generate_brand_stores(p_count IN NUMBER) IS
---         v_brand_id NUMBER;
---         v_opening_date DATE;
---         v_employee_count NUMBER;
---         v_closing_date DATE;
---         v_address_id NUMBER;
---     BEGIN
---         FOR i IN 1 .. p_count LOOP
---                 --v_brand_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, p_count);
---                 v_opening_date := PKG_SAMEN_SMARTPHONES.generate_random_date(to_date('2000-01-01','YYYY-MM-DD'), to_date('2020-01-01','YYYY-MM-DD'));
---                 v_employee_count := PKG_SAMEN_SMARTPHONES.generate_random_number(10, 100);
---                 v_closing_date := v_opening_date + PKG_SAMEN_SMARTPHONES.GENERATE_RANDOM_NUMBER(1000,200000);
---                 --v_address_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, p_count);
---
---                 INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date , address_id)
---                 VALUES (v_brand_id, v_opening_date, v_employee_count, v_closing_date ,v_address_id);
---
---                 --add_brand_store(v_brand_id, v_opening_date,v_employee_count,v_closing_date,v_address_id);
---
---             END LOOP;
---     END generate_brand_stores;
-
 
     PROCEDURE generateBrandStores(p_num_stores_per_brand IN NUMBER) IS
         TYPE brand_store_rec IS RECORD (
@@ -311,6 +308,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_closing_date DATE;
         v_random_address_id addresses.address_id%TYPE;
         v_employee_count NUMBER;
+        v_used_address_ids SYS.ODCINUMBERLIST := SYS.ODCINUMBERLIST();
 
         CURSOR c_brands IS
             SELECT brand_id FROM brands;
@@ -322,7 +320,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
                         v_opening_date := PKG_SAMEN_SMARTPHONES.generate_random_date(to_date('2000-01-01','YYYY-MM-DD'), to_date('2020-01-01','YYYY-MM-DD'));
                         v_employee_count := PKG_SAMEN_SMARTPHONES.generate_random_number(10, 100);
                         v_closing_date := v_opening_date + PKG_SAMEN_SMARTPHONES.GENERATE_RANDOM_NUMBER(1000,200000);
-                        v_random_address_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, 100);
+                        v_random_address_id := get_random_address_id(v_used_address_ids);
 
                         v_brand_stores((r_brand.brand_id - 1) * p_num_stores_per_brand + i).brand_id := r_brand.brand_id;
                         v_brand_stores((r_brand.brand_id - 1) * p_num_stores_per_brand + i).opening_date := v_opening_date;
@@ -337,9 +335,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         FORALL i IN INDICES OF v_brand_stores
             INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date , address_id)
             VALUES (v_brand_stores(i).brand_id, v_brand_stores(i).opening_date, v_brand_stores(i).employee_count, v_brand_stores(i).closing_date ,v_brand_stores(i).address_id);
-
-        DBMS_OUTPUT.PUT_LINE((p_num_stores_per_brand * SQL%ROWCOUNT) || ' brand stores inserted successfully.');
-
     EXCEPTION
         WHEN OTHERS THEN
             DBMS_OUTPUT.PUT_LINE('Er is een fout opgetreden: ' || SQLERRM);
