@@ -94,7 +94,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
 
     END add_brand;
 
-    PROCEDURE add_brand_store(p_brand_name IN VARCHAR2, p_opening_date IN DATE, p_employee_count IN NUMBER,
+    PROCEDURE add_brand_store(p_brand_name IN VARCHAR2, p_opening_date IN DATE, p_employee_count IN NUMBER, p_closing_date IN DATE,
                               p_zip IN NUMBER, p_street IN VARCHAR2, p_street_number IN NUMBER) AS
 
         ln_address_id INTEGER;
@@ -105,8 +105,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         ln_address_id := lookup_address_id(p_zip, p_street, p_street_number);
         ln_brand_id := lookup_brand_id(p_brand_name);
 
-        INSERT INTO brand_stores (brand_id, opening_date, employee_count, address_id)
-        VALUES (ln_brand_id, p_opening_date, p_employee_count, ln_address_id);
+        INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date , address_id)
+        VALUES (ln_brand_id, p_opening_date, p_employee_count, p_closing_date , ln_address_id);
 
     END add_brand_store;
 
@@ -176,15 +176,15 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         COMMIT;
 
         -- Insert data into Brand_store table
-        add_brand_store('Apple', TO_DATE('01-01-2010', 'DD-MM-YYYY'), 50, 12345, 'Broadway', 100);
+        add_brand_store('Apple', TO_DATE('01-01-2010', 'DD-MM-YYYY'), 50,Null , 12345, 'Broadway', 100);
 
-        add_brand_store('Google', TO_DATE('15-05-2001', 'DD-MM-YYYY'), 100, 54321, 'Hollywood Blvd', 200);
+        add_brand_store('Google', TO_DATE('15-05-2001', 'DD-MM-YYYY'), 100, Null,54321, 'Hollywood Blvd', 200);
 
-        add_brand_store('Samsung', TO_DATE('20-09-2005', 'DD-MM-YYYY'), 75, 98765, 'Michigan Ave', 300);
+        add_brand_store('Samsung', TO_DATE('20-09-2005', 'DD-MM-YYYY'), 75,Null,98765, 'Michigan Ave', 300);
 
-        add_brand_store('Huawei', TO_DATE('10-11-1995', 'DD-MM-YYYY'), 80, 11111, 'Main St', 400);
+        add_brand_store('Huawei', TO_DATE('10-11-1995', 'DD-MM-YYYY'), 80, Null,11111, 'Main St', 400);
 
-        add_brand_store('Microsoft', TO_DATE('25-03-2012', 'DD-MM-YYYY'), 60, 22222, 'Market St', 500);
+        add_brand_store('Microsoft', TO_DATE('25-03-2012', 'DD-MM-YYYY'), 60, Null,22222, 'Market St', 500);
         COMMIT;
 
         -- Insert data into Promotion table
@@ -224,6 +224,169 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
 
     END bewijs_milestone_M4_S2;
 
+
+
+
+
+
+
+    PROCEDURE generate_addresses(p_count IN NUMBER) IS
+        v_zip NUMBER;
+        v_city VARCHAR2(50);
+        v_street VARCHAR2(50);
+        v_street_number NUMBER;
+    BEGIN
+        FOR i IN 1 .. p_count LOOP
+                v_zip := PKG_SAMEN_SMARTPHONES.generate_random_number(1000, 99999);
+                v_city := PKG_SAMEN_SMARTPHONES.GET_RANDOM_LIST_COMBINATION(SYS.ODCIVARCHAR2LIST('New York', 'Los Angeles', 'Chicago', 'Houston', 'San Francisco','Cupertino','Mountain View','Seoul','Shenzhen','Redmond'), i);
+                v_street := PKG_SAMEN_SMARTPHONES.GET_RANDOM_LIST_COMBINATION(SYS.ODCIVARCHAR2LIST('Broadway', 'Hollywood Blvd', 'Main St', 'Market St', 'Apple Avenue 2','Google Drive 3', 'Samsung-ro', 'Bantian Street', 'Microsoft Way'),i);
+                v_street_number := PKG_SAMEN_SMARTPHONES.generate_random_number(1, 100);
+
+                add_address(v_zip,v_city, v_street_number,v_street);
+
+            END LOOP;
+    END generate_addresses;
+
+    PROCEDURE generate_brands(p_count IN NUMBER) IS
+        v_brand_name VARCHAR2(50);
+        v_brand_founder VARCHAR2(50);
+        v_type VARCHAR2(50);
+        v_key_people VARCHAR2(50);
+        v_founding_date DATE;
+        v_address_id NUMBER;
+
+    BEGIN
+        FOR i IN 1 .. p_count LOOP
+                v_brand_name := PKG_SAMEN_SMARTPHONES.get_random_list_combination(SYS.ODCIVARCHAR2LIST('Samsung', 'Apple', 'Google', 'Huawei', 'Microsoft'), p_count);
+                v_brand_founder := PKG_SAMEN_SMARTPHONES.get_random_list_combination(SYS.ODCIVARCHAR2LIST('Steve Jobs', 'Larry Page', 'Lee Byung-chul', 'Ren Zhengfei', 'Bill Gates'), p_count);
+                v_type := PKG_SAMEN_SMARTPHONES.get_random_list_combination(SYS.ODCIVARCHAR2LIST('Electronics', 'Mobile', 'Telecom', 'Gadgets', 'Technology'), p_count);
+                v_key_people := PKG_SAMEN_SMARTPHONES.get_random_list_combination(SYS.ODCIVARCHAR2LIST('Tim Cook', 'Sundar Pichai', 'Kim Ki-nam', 'Guo Ping', 'Satya Nadella'), p_count);
+                v_founding_date := PKG_SAMEN_SMARTPHONES.generate_random_date(to_date('1975-04-04', 'YYYY-MM-DD'), to_date('2000-01-01', 'YYYY-MM-DD') );
+                v_address_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, p_count);
+
+                INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
+                VALUES (v_brand_name, v_brand_founder, v_type, v_key_people, v_founding_date, v_address_id);
+
+                --add_brand(v_brand_name,v_brand_founder,v_type,v_key_people,v_founding_date);
+
+            END LOOP;
+    END generate_brands;
+--
+--     PROCEDURE generate_brand_stores(p_count IN NUMBER) IS
+--         v_brand_id NUMBER;
+--         v_opening_date DATE;
+--         v_employee_count NUMBER;
+--         v_closing_date DATE;
+--         v_address_id NUMBER;
+--     BEGIN
+--         FOR i IN 1 .. p_count LOOP
+--                 --v_brand_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, p_count);
+--                 v_opening_date := PKG_SAMEN_SMARTPHONES.generate_random_date(to_date('2000-01-01','YYYY-MM-DD'), to_date('2020-01-01','YYYY-MM-DD'));
+--                 v_employee_count := PKG_SAMEN_SMARTPHONES.generate_random_number(10, 100);
+--                 v_closing_date := v_opening_date + PKG_SAMEN_SMARTPHONES.GENERATE_RANDOM_NUMBER(1000,200000);
+--                 --v_address_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, p_count);
+--
+--                 INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date , address_id)
+--                 VALUES (v_brand_id, v_opening_date, v_employee_count, v_closing_date ,v_address_id);
+--
+--                 --add_brand_store(v_brand_id, v_opening_date,v_employee_count,v_closing_date,v_address_id);
+--
+--             END LOOP;
+--     END generate_brand_stores;
+
+
+    PROCEDURE generateBrandStores(p_num_stores_per_brand IN NUMBER) IS
+        TYPE brand_store_rec IS RECORD (
+                                           brand_id       brands.brand_id%TYPE,
+                                           opening_date   DATE,
+                                           employee_count NUMBER,
+                                           closing_date DATE,
+                                           address_id     addresses.address_id%TYPE
+                                       );
+        TYPE brand_store_table IS TABLE OF brand_store_rec INDEX BY PLS_INTEGER;
+
+        v_brand_stores brand_store_table;
+        v_brand_id brands.brand_id%TYPE;
+        v_opening_date DATE;
+        v_closing_date DATE;
+        v_random_address_id addresses.address_id%TYPE;
+        v_employee_count NUMBER;
+
+        CURSOR c_brands IS
+            SELECT brand_id FROM brands;
+
+    BEGIN
+        FOR r_brand IN c_brands LOOP
+                FOR i IN 1 .. p_num_stores_per_brand LOOP
+
+                        v_opening_date := PKG_SAMEN_SMARTPHONES.generate_random_date(to_date('2000-01-01','YYYY-MM-DD'), to_date('2020-01-01','YYYY-MM-DD'));
+                        v_employee_count := PKG_SAMEN_SMARTPHONES.generate_random_number(10, 100);
+                        v_closing_date := v_opening_date + PKG_SAMEN_SMARTPHONES.GENERATE_RANDOM_NUMBER(1000,200000);
+                        v_random_address_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, 100);
+
+                        v_brand_stores((r_brand.brand_id - 1) * p_num_stores_per_brand + i).brand_id := r_brand.brand_id;
+                        v_brand_stores((r_brand.brand_id - 1) * p_num_stores_per_brand + i).opening_date := v_opening_date;
+                        v_brand_stores((r_brand.brand_id - 1) * p_num_stores_per_brand + i).employee_count := v_employee_count;
+                        v_brand_stores((r_brand.brand_id - 1) * p_num_stores_per_brand + i).closing_date := v_opening_date + PKG_SAMEN_SMARTPHONES.GENERATE_RANDOM_NUMBER(1000,200000);
+                        v_brand_stores((r_brand.brand_id - 1) * p_num_stores_per_brand + i).address_id := v_random_address_id;
+
+                    END LOOP;
+            END LOOP;
+
+        -- Bulk insert
+        FORALL i IN INDICES OF v_brand_stores
+            INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date , address_id)
+            VALUES (v_brand_stores(i).brand_id, v_brand_stores(i).opening_date, v_brand_stores(i).employee_count, v_brand_stores(i).closing_date ,v_brand_stores(i).address_id);
+
+        DBMS_OUTPUT.PUT_LINE((p_num_stores_per_brand * SQL%ROWCOUNT) || ' brand stores inserted successfully.');
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Er is een fout opgetreden: ' || SQLERRM);
+    END generateBrandStores;
+
+    PROCEDURE generate_promotions(p_count IN NUMBER) IS
+        v_discount NUMBER;
+        v_name VARCHAR2(50);
+        v_start_date DATE;
+        v_end_date DATE;
+
+    BEGIN
+        FOR i IN 1 .. p_count LOOP
+                v_discount := PKG_SAMEN_SMARTPHONES.generate_random_number(5, 90);
+                v_name := PKG_SAMEN_SMARTPHONES.get_random_list_combination(SYS.ODCIVARCHAR2LIST('Summer Sale', 'Back to School', 'Holiday Special', 'New Year Discount', 'Spring Clearance'), i );
+                v_start_date := PKG_SAMEN_SMARTPHONES.generate_random_date(to_date('2023-01-01', 'YYYY-MM-DD'),to_date('2023-04-01', 'YYYY-MM-DD'));
+                v_end_date := v_start_date + PKG_SAMEN_SMARTPHONES.generate_random_number(1, 30);
+
+                add_promotion(1005 + i,v_discount,v_name,v_start_date,v_end_date);
+
+            END LOOP;
+    END generate_promotions;
+
+    PROCEDURE generate_sales(p_count IN NUMBER) IS
+        v_due_dates DATE;
+        v_phone_ID NUMBER;
+        v_promotion_id NUMBER;
+        v_store_id NUMBER;
+        v_name VARCHAR2(50);
+        v_sale_date DATE;
+
+    BEGIN
+        FOR i IN 1 .. p_count LOOP
+                v_due_dates := PKG_SAMEN_SMARTPHONES.generate_random_date(to_date('2023-01-01', 'YYYY-MM_DD')  , to_date('2024-12-31', 'YYYY-MM_DD'));
+                --v_phone_ID := PKG_SAMEN_SMARTPHONES.generate_random_number(1, p_count);
+                --v_promotion_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, p_count);
+                --v_store_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, p_count);
+                v_name := PKG_SAMEN_SMARTPHONES.get_random_list_combination(SYS.ODCIVARCHAR2LIST('John Doe', 'Jane Smith', 'Alice Johnson', 'Bob Brown', 'Eve Wilson'), p_count);
+                v_sale_date := v_due_dates + PKG_SAMEN_SMARTPHONES.generate_random_number(10,30) ;
+
+                INSERT INTO sales (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
+                VALUES (v_due_dates, v_phone_ID, v_promotion_id, v_store_id, v_name, v_sale_date);
+
+                --add_sale(v_due_dates,v_phone_ID,v_promotion_id,v_store_id,v_name,v_sale_date);
+
+            END LOOP;
+    END generate_sales;
 
 END PKG_S2_smartphones;
 /
