@@ -1,4 +1,6 @@
 CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
+    TYPE  t_address_id_table IS TABLE OF NUMBER INDEX BY PLS_INTEGER;
+
     PROCEDURE empty_tables_s2 IS
     BEGIN
         -- Leegmaken van de tabellen met TRUNCATE
@@ -225,29 +227,25 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
     END bewijs_milestone_M4_S2;
 
 
-    FUNCTION get_random_address_id(used_address_ids IN OUT NOCOPY SYS.ODCINUMBERLIST) RETURN NUMBER IS
-        v_address_id NUMBER;
+    FUNCTION get_unused_address_id(used_address_ids IN OUT NOCOPY t_address_id_table, available_address_ids IN t_address_id_table) RETURN NUMBER IS
+        v_random_index PLS_INTEGER;
+        v_address_id   NUMBER;
     BEGIN
         LOOP
-            SELECT address_id
-            INTO v_address_id
-            FROM (SELECT address_id FROM addresses ORDER BY DBMS_RANDOM.VALUE)
-            WHERE ROWNUM = 1;
+            v_random_index := PKG_SAMEN_SMARTPHONES.generate_random_number(1, available_address_ids.COUNT);
+            v_address_id := available_address_ids(v_random_index);
 
             -- Controleer of het address_id al gebruikt is
-            IF v_address_id NOT IN (SELECT COLUMN_VALUE FROM TABLE(used_address_ids)) THEN
-                EXIT;
+            IF NOT used_address_ids.EXISTS(v_address_id) THEN
+                -- Voeg het address_id toe aan de lijst van gebruikte address_ids
+                used_address_ids(v_address_id) := v_address_id;
+                RETURN v_address_id;
             END IF;
         END LOOP;
-
-        used_address_ids.EXTEND;
-        used_address_ids(used_address_ids.COUNT) := v_address_id;
-
-        RETURN v_address_id;
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
             RETURN NULL;
-    END get_random_address_id;
+    END get_unused_address_id;
 
 
     PROCEDURE generate_addresses(p_count IN NUMBER) IS
@@ -275,14 +273,20 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_founding_date DATE;
         v_address_id NUMBER;
 
-    BEGIN
+        v_used_address_ids t_address_id_table;
+        v_available_address_ids t_address_id_table;
+
+    BEGIN-- Haal alle beschikbare address_ids op
+        SELECT address_id BULK COLLECT INTO v_available_address_ids
+        FROM addresses;
+
         FOR i IN 1 .. p_count LOOP
                 v_brand_name := PKG_SAMEN_SMARTPHONES.get_random_list_combination(SYS.ODCIVARCHAR2LIST('Samsung', 'Apple', 'Google', 'Huawei', 'Microsoft'), p_count);
                 v_brand_founder := PKG_SAMEN_SMARTPHONES.get_random_list_combination(SYS.ODCIVARCHAR2LIST('Steve Jobs', 'Larry Page', 'Lee Byung-chul', 'Ren Zhengfei', 'Bill Gates'), p_count);
                 v_type := PKG_SAMEN_SMARTPHONES.get_random_list_combination(SYS.ODCIVARCHAR2LIST('Electronics', 'Mobile', 'Telecom', 'Gadgets', 'Technology'), p_count);
                 v_key_people := PKG_SAMEN_SMARTPHONES.get_random_list_combination(SYS.ODCIVARCHAR2LIST('Tim Cook', 'Sundar Pichai', 'Kim Ki-nam', 'Guo Ping', 'Satya Nadella'), p_count);
                 v_founding_date := PKG_SAMEN_SMARTPHONES.generate_random_date(to_date('1975-04-04', 'YYYY-MM-DD'), to_date('2000-01-01', 'YYYY-MM-DD') );
-                v_address_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, p_count);
+                v_address_id := get_unused_address_id(v_used_address_ids, v_available_address_ids);
 
                 INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
                 VALUES (v_brand_name, v_brand_founder, v_type, v_key_people, v_founding_date, v_address_id);
@@ -308,19 +312,30 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_closing_date DATE;
         v_random_address_id addresses.address_id%TYPE;
         v_employee_count NUMBER;
-        v_used_address_ids SYS.ODCINUMBERLIST := SYS.ODCINUMBERLIST();
+
+        v_used_address_ids t_address_id_table; -- Associatieve array voor gebruikte address_ids
+        v_available_address_ids t_address_id_table;
 
         CURSOR c_brands IS
             SELECT brand_id FROM brands;
 
     BEGIN
+
+        SELECT address_id BULK COLLECT INTO v_available_address_ids
+        FROM addresses;
+
+        -- Haal alle gebruikte address_ids in brands op
+        SELECT address_id BULK COLLECT INTO v_used_address_ids
+        FROM brands;
+
         FOR r_brand IN c_brands LOOP
                 FOR i IN 1 .. p_num_stores_per_brand LOOP
 
                         v_opening_date := PKG_SAMEN_SMARTPHONES.generate_random_date(to_date('2000-01-01','YYYY-MM-DD'), to_date('2020-01-01','YYYY-MM-DD'));
                         v_employee_count := PKG_SAMEN_SMARTPHONES.generate_random_number(10, 100);
                         v_closing_date := v_opening_date + PKG_SAMEN_SMARTPHONES.GENERATE_RANDOM_NUMBER(1000,200000);
-                        v_random_address_id := get_random_address_id(v_used_address_ids);
+                        v_random_address_id := get_unused_address_id(v_used_address_ids, v_available_address_ids);
+
 
                         v_brand_stores((r_brand.brand_id - 1) * p_num_stores_per_brand + i).brand_id := r_brand.brand_id;
                         v_brand_stores((r_brand.brand_id - 1) * p_num_stores_per_brand + i).opening_date := v_opening_date;
@@ -339,6 +354,44 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         WHEN OTHERS THEN
             DBMS_OUTPUT.PUT_LINE('Er is een fout opgetreden: ' || SQLERRM);
     END generateBrandStores;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     PROCEDURE generate_promotions(p_count IN NUMBER) IS
         v_discount NUMBER;

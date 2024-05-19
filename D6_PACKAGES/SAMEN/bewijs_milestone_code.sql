@@ -17,7 +17,7 @@ BEGIN
     --S1
     PKG_S1_smartphones.empty_tables_s1();
     PKG_S1_SMARTPHONES.bewijs_milestone_M4_S1();
-    --
+    --µ
 --     --S2
     PKG_S2_smartphones.empty_tables_s2();
     --PKG_S2_SMARTPHONES.bewijs_milestone_M4_S2();
@@ -29,10 +29,10 @@ end;
 
 BEGIN
 
-    PKG_S2_SMARTPHONES.GENERATE_ADDRESSES(930);
-    PKG_S2_SMARTPHONES.GENERATE_BRANDS(300);
-    PKG_S2_SMARTPHONES.generateBrandStores(300);
-    PKG_S2_SMARTPHONES.GENERATE_PROMOTIONS(300);
+    PKG_S2_SMARTPHONES.GENERATE_ADDRESSES(1000);
+    PKG_S2_SMARTPHONES.GENERATE_BRANDS(30);
+    PKG_S2_SMARTPHONES.generateBrandStores(30);
+    --PKG_S2_SMARTPHONES.GENERATE_PROMOTIONS(30);
     --PKG_S2_SMARTPHONES.GENERATE_SALES(60);
 
     Commit;
