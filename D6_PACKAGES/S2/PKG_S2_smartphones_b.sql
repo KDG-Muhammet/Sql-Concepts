@@ -255,7 +255,15 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_city          VARCHAR2(50);
         v_street        VARCHAR2(50);
         v_street_number NUMBER;
+
+        v_start_timestamp       TIMESTAMP;
+        v_end_timestamp         TIMESTAMP;
+        v_duration              NUMBER;
+
     BEGIN
+
+        v_start_timestamp := SYSTIMESTAMP;
+
         FOR i IN 1 .. p_count
             LOOP
                 v_zip := PKG_SAMEN_SMARTPHONES.generate_random_number(1000, 99999);
@@ -270,6 +278,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
                 add_address(v_zip, v_city, v_street_number, v_street);
 
             END LOOP;
+
+        v_end_timestamp := SYSTIMESTAMP;
+        v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
+
+        -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
+        DBMS_OUTPUT.PUT_LINE('Procedure generate_addresses executed with p_count = ' || p_count ||
+                             '. Rows added: ' || p_count || '. Duration: ' || v_duration || ' seconds.');
+
     END generate_addresses;
 
     PROCEDURE generate_brands(p_count IN NUMBER) IS
@@ -281,11 +297,17 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_address_id            NUMBER;
         v_used_address_ids      t_address_id_table;
         v_available_address_ids t_address_id_table;
+        v_start_timestamp       TIMESTAMP;
+        v_end_timestamp         TIMESTAMP;
+        v_duration              NUMBER;
 
     BEGIN-- Haal alle beschikbare address_ids op
         SELECT address_id BULK COLLECT
         INTO v_available_address_ids
         FROM addresses;
+
+        v_start_timestamp := SYSTIMESTAMP;
+
 
         FOR i IN 1 .. p_count
             LOOP
@@ -309,6 +331,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
                 --add_brand(v_brand_name,v_brand_founder,v_type,v_key_people,v_founding_date);
 
             END LOOP;
+
+        v_end_timestamp := SYSTIMESTAMP;
+        v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
+
+        -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
+        DBMS_OUTPUT.PUT_LINE('Procedure generate_brands executed with p_count = ' || p_count ||
+                             '. Rows added: ' || p_count || '. Duration: ' || v_duration || ' seconds.');
+
     END generate_brands;
 
     PROCEDURE generateBrandStores(p_num_stores_per_brand IN NUMBER) IS
@@ -327,13 +357,23 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_closing_date          DATE;
         v_random_address_id     addresses.address_id%TYPE;
         v_employee_count        NUMBER;
+
         v_used_address_ids      t_address_id_table; -- Associatieve array voor gebruikte address_ids
         v_available_address_ids t_address_id_table;
+
+        v_start_timestamp       TIMESTAMP;
+        v_end_timestamp         TIMESTAMP;
+        v_duration              NUMBER;
+        total_rows_added  NUMBER := 0;
+
         CURSOR c_brands IS
             SELECT brand_id
             FROM brands;
 
     BEGIN
+
+        v_start_timestamp := SYSTIMESTAMP;
+
 
         SELECT address_id BULK COLLECT
         INTO v_available_address_ids
@@ -368,6 +408,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
                         v_brand_stores((r_brand.brand_id - 1) * p_num_stores_per_brand + i).address_id :=
                                 v_random_address_id;
 
+                        total_rows_added := total_rows_added + 1;
+
                     END LOOP;
             END LOOP;
 
@@ -376,6 +418,15 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
             INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date, address_id)
             VALUES (v_brand_stores(i).brand_id, v_brand_stores(i).opening_date, v_brand_stores(i).employee_count,
                     v_brand_stores(i).closing_date, v_brand_stores(i).address_id);
+
+
+        v_end_timestamp := SYSTIMESTAMP;
+        v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
+
+        -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
+        DBMS_OUTPUT.PUT_LINE('Procedure generate_brand_stores executed with p_count = ' || p_num_stores_per_brand ||
+                             '. Rows added: ' || total_rows_added || '. Duration: ' || v_duration || ' seconds.');
+
     END generateBrandStores;
 
 
@@ -385,7 +436,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_start_date DATE;
         v_end_date   DATE;
 
+        v_start_timestamp       TIMESTAMP;
+        v_end_timestamp         TIMESTAMP;
+        v_duration              NUMBER;
+
     BEGIN
+
+        v_start_timestamp := SYSTIMESTAMP;
+
         FOR i IN 1 .. p_count
             LOOP
                 v_discount := PKG_SAMEN_SMARTPHONES.generate_random_number(5, 90);
@@ -399,6 +457,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
                 add_promotion(1005 + i, v_discount, v_name, v_start_date, v_end_date);
 
             END LOOP;
+
+        v_end_timestamp := SYSTIMESTAMP;
+        v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
+
+        -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
+        DBMS_OUTPUT.PUT_LINE('Procedure generate_promotions executed with p_count = ' || p_count ||
+                             '. Rows added: ' || p_count || '. Duration: ' || v_duration || ' seconds.');
+
     END generate_promotions;
 
     PROCEDURE generate_sales(s_rows_per_store IN NUMBER) IS
@@ -420,15 +486,23 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_promotion_id NUMBER;
         v_phone_id     NUMBER;
         v_store_id     NUMBER;
+
+        v_start_timestamp       TIMESTAMP;
+        v_end_timestamp         TIMESTAMP;
+        v_duration              NUMBER;
+        total_rows_added  NUMBER := 0;
+
         CURSOR c_brand_stores IS
             SELECT STORE_ID
             FROM BRAND_STORES;
 
     BEGIN
 
+        v_start_timestamp := SYSTIMESTAMP;
 
         FOR r_brand_store IN c_brand_stores
             LOOP
+
                 FOR i IN 1 .. s_rows_per_store
                     LOOP
 
@@ -456,6 +530,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
                         v_sales((r_brand_store.STORE_ID - 1) * s_rows_per_store + i).PHONE_ID :=
                                 v_phone_id;
 
+                        total_rows_added := total_rows_added + 1;
 
                     END LOOP;
             END LOOP;
@@ -465,6 +540,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
             INSERT INTO sales (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
             VALUES (v_sales(i).DUE_DATES, v_sales(i).PHONE_ID, v_sales(i).PROMOTION_ID,
                     v_sales(i).STORE_ID, v_sales(i).NAME, v_sales(i).sale_date);
+
+
+        v_end_timestamp := SYSTIMESTAMP;
+        v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
+
+        -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
+        DBMS_OUTPUT.PUT_LINE('Procedure generate_sales executed with p_count = ' || s_rows_per_store ||
+                             '. Rows added: ' || total_rows_added  || '. Duration: ' || v_duration || ' seconds.');
 
     END generate_sales;
 

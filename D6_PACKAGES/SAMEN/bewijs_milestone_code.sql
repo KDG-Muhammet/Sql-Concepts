@@ -39,8 +39,13 @@ BEGIN
 end;
 
 BEGIN
-    PKG_SAMEN_SMARTPHONES.bewijs_Random_M5();
+    --PKG_SAMEN_SMARTPHONES.bewijs_Random_M5();
     -- PKG_S1_SMARTPHONES.bewijs_milestone_M5_S2();
-    --PKG_S2_SMARTPHONES.bewijs_milestone_M5_S2();
+    PKG_S2_SMARTPHONES.bewijs_milestone_M5_S2();
     COMMIT;
 end;
+
+SELECT *
+FROM BRANDS
+ORDER BY DBMS_RANDOM.VALUE()
+    FETCH FIRST 10 ROWS ONLY;
