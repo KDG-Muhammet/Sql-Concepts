@@ -1,6 +1,7 @@
 CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
     TYPE t_address_id_table IS TABLE OF NUMBER INDEX BY PLS_INTEGER;
 
+        --empty tables funtion
     PROCEDURE empty_tables_s2 IS
     BEGIN
         -- Leegmaken van de tabellen met TRUNCATE
@@ -18,6 +19,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
 
     END empty_tables_s2;
 
+        -- lookup functies
     FUNCTION lookup_brand_id(p_brand_name IN VARCHAR2) RETURN NUMBER AS
         v_brand_id NUMBER;
     BEGIN
@@ -73,6 +75,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
 
     END lookup_address_id;
 
+        --DDl add single rows into db
     PROCEDURE add_address(p_zip IN NUMBER, p_city IN VARCHAR2, p_street_number IN NUMBER, p_street IN VARCHAR2) AS
     BEGIN
 
@@ -144,7 +147,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
                 p_name, p_sale_date);
 
     END add_sale;
-
 
     PROCEDURE bewijs_milestone_M4_S2 AS
     BEGIN
@@ -231,6 +233,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
     END bewijs_milestone_M4_S2;
 
 
+        -- functie generate random rows
     FUNCTION get_unused_address_id(used_address_ids IN OUT NOCOPY t_address_id_table,
                                    available_address_ids IN t_address_id_table) RETURN NUMBER IS
         v_random_index PLS_INTEGER;
@@ -248,7 +251,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
             END IF;
         END LOOP;
     END get_unused_address_id;
-
 
     PROCEDURE generate_addresses(p_count IN NUMBER) IS
         v_zip           NUMBER;
@@ -429,7 +431,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
 
     END generateBrandStores;
 
-
     PROCEDURE generate_promotions(p_count IN NUMBER) IS
         v_discount   NUMBER;
         v_name       VARCHAR2(50);
@@ -551,7 +552,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
 
     END generate_sales;
 
-
     PROCEDURE bewijs_milestone_M5_S2 AS
     BEGIN
 
@@ -563,9 +563,306 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
 
         generate_promotions(30);
 
-        generate_sales(60);
+        generate_sales(600);
 
     END bewijs_milestone_M5_S2;
+
+
+
+PROCEDURE generateBrandStores_single(p_num_stores_per_brand IN NUMBER) IS
+    TYPE brand_store_rec IS RECORD
+                            (
+                                brand_id       brands.brand_id%TYPE,
+                                opening_date   DATE,
+                                employee_count NUMBER,
+                                closing_date   DATE,
+                                address_id     addresses.address_id%TYPE
+                            );
+
+    v_brand_id          brands.brand_id%TYPE;
+    v_opening_date      DATE;
+    v_closing_date      DATE;
+    v_random_address_id addresses.address_id%TYPE;
+    v_employee_count    NUMBER;
+
+    v_used_address_ids      t_address_id_table; -- Associatieve array voor gebruikte address_ids
+    v_available_address_ids t_address_id_table;
+
+    v_start_timestamp TIMESTAMP;
+    v_end_timestamp   TIMESTAMP;
+    v_duration        NUMBER;
+    total_rows_added  NUMBER := 0;
+
+    CURSOR c_brands IS
+        SELECT brand_id
+        FROM brands;
+
+BEGIN
+    v_start_timestamp := SYSTIMESTAMP;
+
+    SELECT address_id BULK COLLECT
+    INTO v_available_address_ids
+    FROM addresses;
+
+    -- Haal alle gebruikte address_ids in brands op
+    SELECT address_id BULK COLLECT
+    INTO v_used_address_ids
+    FROM brands;
+
+    FOR r_brand IN c_brands LOOP
+            FOR i IN 1 .. p_num_stores_per_brand LOOP
+                    v_opening_date := PKG_SAMEN_SMARTPHONES.generate_random_date(TO_DATE('2000-01-01', 'YYYY-MM-DD'), TO_DATE('2020-01-01', 'YYYY-MM-DD'));
+                    v_employee_count := PKG_SAMEN_SMARTPHONES.generate_random_number(10, 100);
+                    v_closing_date := v_opening_date + PKG_SAMEN_SMARTPHONES.GENERATE_RANDOM_NUMBER(1000, 200000);
+                    v_random_address_id := get_unused_address_id(v_used_address_ids, v_available_address_ids);
+
+                    INSERT INTO brand_stores (brand_id, opening_date, employee_count, closing_date, address_id)
+                    VALUES (r_brand.brand_id, v_opening_date, v_employee_count, v_closing_date, v_random_address_id);
+
+                    total_rows_added := total_rows_added + 1;
+                END LOOP;
+        END LOOP;
+
+    v_end_timestamp := SYSTIMESTAMP;
+    v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
+
+    -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
+    DBMS_OUTPUT.PUT_LINE('Procedure generateBrandStores_single executed with p_num_stores_per_brand = ' || p_num_stores_per_brand ||
+                         '. Rows added: ' || total_rows_added || '. Duration: ' || v_duration || ' seconds.');
+END generateBrandStores_single;
+
+
+PROCEDURE generate_sales_single(s_rows_per_store IN NUMBER) IS
+    TYPE sale_rec IS RECORD
+                     (
+                         DUE_DATES    DATE,
+                         PHONE_ID     NUMBER,
+                         PROMOTION_ID NUMBER,
+                         STORE_ID     NUMBER,
+                         NAME         VARCHAR2(50),
+                         sale_date    DATE
+                     );
+
+    v_name         VARCHAR2(50);
+    v_due_dates    DATE;
+    v_sale_date    DATE;
+    v_promotion_id NUMBER;
+    v_phone_id     NUMBER;
+    v_store_id     NUMBER;
+
+    v_start_timestamp TIMESTAMP;
+    v_end_timestamp   TIMESTAMP;
+    v_duration        NUMBER;
+    total_rows_added  NUMBER := 0;
+
+    CURSOR c_brand_stores IS
+        SELECT STORE_ID
+        FROM BRAND_STORES;
+
+BEGIN
+    v_start_timestamp := SYSTIMESTAMP;
+
+    FOR r_brand_store IN c_brand_stores LOOP
+            FOR i IN 1 .. s_rows_per_store LOOP
+                    v_due_dates := PKG_SAMEN_SMARTPHONES.generate_random_date(TO_DATE('2023-01-01', 'YYYY-MM-DD'), TO_DATE('2024-12-31', 'YYYY-MM-DD'));
+                    v_name := PKG_SAMEN_SMARTPHONES.get_random_list_combination(
+                            SYS.ODCIVARCHAR2LIST('John Doe', 'Jane Smith', 'Alice Johnson', 'Bob Brown', 'Eve Wilson'), i);
+                    v_sale_date := v_due_dates + PKG_SAMEN_SMARTPHONES.generate_random_number(10, 30);
+                    v_promotion_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1006, 1035);
+                    v_phone_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, 5);
+                    v_store_id := r_brand_store.STORE_ID;
+
+                    INSERT INTO sales (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
+                    VALUES (v_due_dates, v_phone_id, v_promotion_id, v_store_id, v_name, v_sale_date);
+
+                    total_rows_added := total_rows_added + 1;
+                END LOOP;
+        END LOOP;
+
+    v_end_timestamp := SYSTIMESTAMP;
+    v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
+
+    -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
+    DBMS_OUTPUT.PUT_LINE('Procedure generate_sales_single executed with s_rows_per_store = ' || s_rows_per_store ||
+                         '. Rows added: ' || total_rows_added || '. Duration: ' || v_duration || ' seconds.');
+END generate_sales_single;
+
+PROCEDURE generate_brands_bulk(p_count IN NUMBER) IS
+    TYPE brand_rec IS RECORD
+                      (
+                          BRAND_NAME     VARCHAR2(50),
+                          BRAND_FOUNDER  VARCHAR2(50),
+                          TYPE           VARCHAR2(50),
+                          KEY_PEOPLE     VARCHAR2(50),
+                          FOUNDING_DATE  DATE,
+                          ADDRESS_ID     NUMBER
+                      );
+
+    TYPE brand_table IS TABLE OF brand_rec INDEX BY PLS_INTEGER;
+    v_brands       brand_table;
+    v_brand_name   VARCHAR2(50);
+    v_brand_founder VARCHAR2(50);
+    v_type         VARCHAR2(50);
+    v_key_people   VARCHAR2(50);
+    v_founding_date DATE;
+    v_address_id   NUMBER;
+
+    v_start_timestamp TIMESTAMP;
+    v_end_timestamp   TIMESTAMP;
+    v_duration        NUMBER;
+    total_rows_added  NUMBER := 0;
+
+    v_used_address_ids t_address_id_table;
+    v_available_address_ids t_address_id_table;
+
+BEGIN
+    v_start_timestamp := SYSTIMESTAMP;
+
+    -- Haal alle beschikbare address_ids op
+    SELECT address_id BULK COLLECT INTO v_available_address_ids FROM addresses;
+
+    FOR i IN 1 .. p_count LOOP
+            v_brand_name := PKG_SAMEN_SMARTPHONES.get_random_list_combination(
+                    SYS.ODCIVARCHAR2LIST('Samsung', 'Apple', 'Google', 'Huawei', 'Microsoft'), i);
+            v_brand_founder := PKG_SAMEN_SMARTPHONES.get_random_list_combination(
+                    SYS.ODCIVARCHAR2LIST('Steve Jobs', 'Larry Page', 'Lee Byung-chul', 'Ren Zhengfei', 'Bill Gates'), i);
+            v_type := PKG_SAMEN_SMARTPHONES.get_random_list_combination(
+                    SYS.ODCIVARCHAR2LIST('Electronics', 'Mobile', 'Telecom', 'Gadgets', 'Technology'), i);
+            v_key_people := PKG_SAMEN_SMARTPHONES.get_random_list_combination(
+                    SYS.ODCIVARCHAR2LIST('Tim Cook', 'Sundar Pichai', 'Kim Ki-nam', 'Guo Ping', 'Satya Nadella'), i);
+            v_founding_date := PKG_SAMEN_SMARTPHONES.generate_random_date(TO_DATE('1975-04-04', 'YYYY-MM-DD'), TO_DATE('2000-01-01', 'YYYY-MM-DD'));
+            v_address_id := get_unused_address_id(v_used_address_ids, v_available_address_ids);
+
+            v_brands(i).BRAND_NAME := v_brand_name;
+            v_brands(i).BRAND_FOUNDER := v_brand_founder;
+            v_brands(i).TYPE := v_type;
+            v_brands(i).KEY_PEOPLE := v_key_people;
+            v_brands(i).FOUNDING_DATE := v_founding_date;
+            v_brands(i).ADDRESS_ID := v_address_id;
+
+            total_rows_added := total_rows_added + 1;
+        END LOOP;
+
+    FORALL i IN INDICES OF v_brands
+        INSERT INTO brands (brand_name, brand_founder, type, key_people, founding_date, address_id)
+        VALUES (v_brands(i).BRAND_NAME, v_brands(i).BRAND_FOUNDER, v_brands(i).TYPE, v_brands(i).KEY_PEOPLE,
+                v_brands(i).FOUNDING_DATE, v_brands(i).ADDRESS_ID);
+
+    v_end_timestamp := SYSTIMESTAMP;
+    v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
+
+    -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
+    DBMS_OUTPUT.PUT_LINE('Procedure generate_brands_bulk executed with p_count = ' || p_count ||
+                         '. Rows added: ' || total_rows_added || '. Duration: ' || v_duration || ' seconds.');
+END generate_brands_bulk;
+
+PROCEDURE generate_promotions_bulk(p_count IN NUMBER) IS
+    TYPE promotion_rec IS RECORD
+                          (
+                              promotion_id NUMBER,
+                              discount   NUMBER,
+                              name       VARCHAR2(50),
+                              start_date DATE,
+                              end_date   DATE
+                          );
+
+    TYPE promotion_table IS TABLE OF promotion_rec INDEX BY PLS_INTEGER;
+    v_promotions          promotion_table;
+
+    v_promotion_id   NUMBER;
+    v_discount   NUMBER;
+    v_name       VARCHAR2(50);
+    v_start_date DATE;
+    v_end_date   DATE;
+
+
+    v_start_timestamp TIMESTAMP;
+    v_end_timestamp   TIMESTAMP;
+    v_duration        NUMBER;
+
+BEGIN
+    v_start_timestamp := SYSTIMESTAMP;
+
+    FOR i IN 1 .. p_count LOOP
+            v_discount := PKG_SAMEN_SMARTPHONES.generate_random_number(5, 90);
+            v_name := PKG_SAMEN_SMARTPHONES.get_random_list_combination(
+                    SYS.ODCIVARCHAR2LIST('Summer Sale', 'Back to School', 'Holiday Special', 'New Year Discount', 'Spring Clearance'), i);
+            v_start_date := PKG_SAMEN_SMARTPHONES.generate_random_date(TO_DATE('2023-01-01', 'YYYY-MM-DD'), TO_DATE('2023-04-01', 'YYYY-MM-DD'));
+            v_end_date := v_start_date + PKG_SAMEN_SMARTPHONES.generate_random_number(1, 30);
+            v_promotion_id := 1005 + i;
+
+            v_promotions(i).promotion_id := v_promotion_id;
+            v_promotions(i).discount := v_discount;
+            v_promotions(i).name := v_name;
+            v_promotions(i).start_date := v_start_date;
+            v_promotions(i).end_date := v_end_date;
+
+        END LOOP;
+
+    FORALL i IN INDICES OF v_promotions
+        INSERT INTO promotions (promotion_id ,discount, name, start_date, end_date)
+        VALUES (v_promotions(i).promotion_id  ,v_promotions(i).discount, v_promotions(i).name, v_promotions(i).start_date, v_promotions(i).end_date);
+
+    v_end_timestamp := SYSTIMESTAMP;
+    v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
+
+    -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
+    DBMS_OUTPUT.PUT_LINE('Procedure generate_promotions_bulk executed with p_count = ' || p_count ||
+                         '. Rows added: ' || p_count || '. Duration: ' || v_duration || ' seconds.');
+END generate_promotions_bulk;
+
+PROCEDURE generate_addresses_bulk(p_count IN NUMBER) IS
+    TYPE address_rec IS RECORD
+                        (
+                            zip           NUMBER,
+                            city          VARCHAR2(50),
+                            street        VARCHAR2(50),
+                            street_number NUMBER
+                        );
+
+    TYPE address_table IS TABLE OF address_rec INDEX BY PLS_INTEGER;
+    v_addresses      address_table;
+
+    v_zip           NUMBER;
+    v_city          VARCHAR2(50);
+    v_street        VARCHAR2(50);
+    v_street_number NUMBER;
+
+    v_start_timestamp TIMESTAMP;
+    v_end_timestamp   TIMESTAMP;
+    v_duration        NUMBER;
+
+BEGIN
+    v_start_timestamp := SYSTIMESTAMP;
+
+    FOR i IN 1 .. p_count LOOP
+            v_zip := PKG_SAMEN_SMARTPHONES.generate_random_number(1000, 99999);
+            v_city := PKG_SAMEN_SMARTPHONES.get_random_list_combination(
+                    SYS.ODCIVARCHAR2LIST('New York', 'Los Angeles', 'Chicago', 'Houston', 'San Francisco',
+                                         'Cupertino', 'Mountain View', 'Seoul', 'Shenzhen', 'Redmond'), i);
+            v_street := PKG_SAMEN_SMARTPHONES.get_random_list_combination(
+                    SYS.ODCIVARCHAR2LIST('Broadway', 'Hollywood Blvd', 'Main St', 'Market St', 'Apple Avenue 2',
+                                         'Google Drive 3', 'Samsung-ro', 'Bantian Street', 'Microsoft Way'), i);
+            v_street_number := PKG_SAMEN_SMARTPHONES.generate_random_number(1, 100);
+
+            v_addresses(i).zip := v_zip;
+            v_addresses(i).city := v_city;
+            v_addresses(i).street := v_street;
+            v_addresses(i).street_number := v_street_number;
+        END LOOP;
+
+    FORALL i IN INDICES OF v_addresses
+        INSERT INTO addresses (zip, city, street_number, street)
+        VALUES (v_addresses(i).zip, v_addresses(i).city, v_addresses(i).street_number, v_addresses(i).street);
+
+    v_end_timestamp := SYSTIMESTAMP;
+    v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
+
+    -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
+    DBMS_OUTPUT.PUT_LINE('Procedure generate_addresses_bulk executed with p_count = ' || p_count ||
+                         '. Rows added: ' || p_count || '. Duration: ' || v_duration || ' seconds.');
+END generate_addresses_bulk;
+
 
 END PKG_S2_smartphones;
 /
