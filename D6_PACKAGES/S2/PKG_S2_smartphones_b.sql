@@ -426,7 +426,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
 
     BEGIN
 
-        -- Voeg willekeurige rijen toe aan tabel Z voor elke rij in tabel Y
+
         FOR r_brand_store IN c_brand_stores
             LOOP
                 FOR i IN 1 .. s_rows_per_store
@@ -467,6 +467,22 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
                     v_sales(i).STORE_ID, v_sales(i).NAME, v_sales(i).sale_date);
 
     END generate_sales;
+
+
+    PROCEDURE bewijs_milestone_M5_S2 AS
+    BEGIN
+
+        generate_addresses(1000);
+
+        generate_brands(30);
+
+        generateBrandStores(30);
+
+        generate_promotions(30);
+
+        generate_sales(60);
+
+    END bewijs_milestone_M5_S2;
 
 END PKG_S2_smartphones;
 /

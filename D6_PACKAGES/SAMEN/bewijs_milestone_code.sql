@@ -6,7 +6,7 @@ SELECT 'S2-X  : brands',                (SELECT COUNT(*) FROM brands            
 SELECT 'S2-Y  : brand_stores',          (SELECT COUNT(*) FROM brand_stores          ) FROM DUAL UNION
 SELECT 'S2-Z  : sales',                 (SELECT COUNT(*) FROM sales                 ) FROM DUAL UNION
 SELECT 'S2-W  : promotions',            (SELECT COUNT(*) FROM promotions            ) FROM DUAL UNION
-SELECT 'S2_  : addresses',              (SELECT COUNT(*) FROM addresses             ) FROM DUAL;
+SELECT 'S2_   : addresses',              (SELECT COUNT(*) FROM addresses             ) FROM DUAL;
 
 
 BEGIN
@@ -36,4 +36,11 @@ BEGIN
     PKG_S2_SMARTPHONES.GENERATE_SALES(60);
 
     Commit;
+end;
+
+BEGIN
+    PKG_SAMEN_SMARTPHONES.bewijs_Random_M5();
+    -- PKG_S1_SMARTPHONES.bewijs_milestone_M5_S2();
+    --PKG_S2_SMARTPHONES.bewijs_milestone_M5_S2();
+    COMMIT;
 end;
