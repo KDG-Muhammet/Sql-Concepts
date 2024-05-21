@@ -284,7 +284,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
 
         -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
-        DBMS_OUTPUT.PUT_LINE('Procedure generate_addresses executed with p_count = ' || p_count ||
+        DBMS_OUTPUT.PUT_LINE('Procedure generate_addresses_single executed with p_count = ' || p_count ||
                              '. Rows added: ' || p_count || '. Duration: ' || v_duration || ' seconds.');
 
     END generate_addresses;
@@ -337,7 +337,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
 
         -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
-        DBMS_OUTPUT.PUT_LINE('Procedure generate_brands executed with p_count = ' || p_count ||
+        DBMS_OUTPUT.PUT_LINE('Procedure generate_brands_single executed with p_count = ' || p_count ||
                              '. Rows added: ' || p_count || '. Duration: ' || v_duration || ' seconds.');
 
     END generate_brands;
@@ -437,7 +437,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
 
         -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
-        DBMS_OUTPUT.PUT_LINE('Procedure generate_promotions executed with p_count = ' || p_count ||
+        DBMS_OUTPUT.PUT_LINE('Procedure generate_promotions_single executed with p_count = ' || p_count ||
                              '. Rows added: ' || p_count || '. Duration: ' || v_duration || ' seconds.');
 
     END generate_promotions;
@@ -502,7 +502,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
     PROCEDURE bewijs_milestone_M5_S2 AS
     BEGIN
 
-        generate_addresses(1000);
+        generate_addresses(1100);
 
         generate_brands(30);
 
@@ -515,7 +515,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
     END bewijs_milestone_M5_S2;
 
 
-   -- funcities bulk
+    -- funcities bulk
 
     PROCEDURE generate_addresses_bulk(p_count IN NUMBER) IS
         TYPE address_rec IS RECORD
@@ -717,7 +717,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
 
         -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
-        DBMS_OUTPUT.PUT_LINE('Procedure generate_brand_stores executed with p_count = ' || p_num_stores_per_brand ||
+        DBMS_OUTPUT.PUT_LINE('Procedure generate_brand_stores_bulk executed with p_count = ' ||
+                             p_num_stores_per_brand ||
                              '. Rows added: ' || total_rows_added || '. Duration: ' || v_duration || ' seconds.');
 
     END generate_brand_stores_bulk;
@@ -854,10 +855,30 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_duration := PKG_SAMEN_SMARTPHONES.timestamp_diff(v_end_timestamp, v_start_timestamp);
 
         -- Log de functienaam, parameters, aantal toegevoegde rijen en de duur van de procedure
-        DBMS_OUTPUT.PUT_LINE('Procedure generate_sales executed with p_count = ' || s_rows_per_store ||
+        DBMS_OUTPUT.PUT_LINE('Procedure generate_sales_bulk executed with p_count = ' || s_rows_per_store ||
                              '. Rows added: ' || total_rows_added || '. Duration: ' || v_duration || ' seconds.');
 
     END generate_sales_bulk;
+
+    PROCEDURE bewijs_milestone_M7_S2 AS
+    BEGIN
+
+        empty_tables_s2;
+        bewijs_milestone_M4_S2;
+        DBMS_OUTPUT.PUT_LINE('comparison single bulk - bewijs_milestone_M5_S2(30,30,30,600)');
+        BEWIJS_MILESTONE_M5_S2();
+
+        empty_tables_s2;
+        bewijs_milestone_M4_S2;
+        DBMS_OUTPUT.PUT_LINE('comparison bulk - bewijs_milestone_M7_S2(30,30,30,600)');
+        generate_addresses_bulk(1100);
+        generate_brands_bulk(30);
+        generate_brand_stores_bulk(30);
+        generate_promotions_bulk(30);
+        generate_sales_bulk(600);
+
+    END bewijs_milestone_M7_S2;
+
 
 
 

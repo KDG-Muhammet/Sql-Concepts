@@ -20,7 +20,7 @@ BEGIN
     --µ
 --     --S2
     PKG_S2_smartphones.empty_tables_s2();
-    --PKG_S2_SMARTPHONES.bewijs_milestone_M4_S2();
+    PKG_S2_SMARTPHONES.bewijs_milestone_M4_S2();
 
     COMMIT;
 
@@ -29,9 +29,9 @@ end;
 
 BEGIN
 
-    PKG_S2_SMARTPHONES.GENERATE_ADDRESSES(1000);
+    PKG_S2_SMARTPHONES.GENERATE_ADDRESSES(1100);
     PKG_S2_SMARTPHONES.GENERATE_BRANDS(30);
-    PKG_S2_SMARTPHONES.generateBrandStores(30);
+    PKG_S2_SMARTPHONES.generate_brands_stores(30);
     PKG_S2_SMARTPHONES.GENERATE_PROMOTIONS(30);
     PKG_S2_SMARTPHONES.GENERATE_SALES(60);
 
@@ -39,11 +39,21 @@ BEGIN
 end;
 
 BEGIN
-    --PKG_SAMEN_SMARTPHONES.bewijs_Random_M5();
-    -- PKG_S1_SMARTPHONES.bewijs_milestone_M5_S2();
+    PKG_SAMEN_SMARTPHONES.bewijs_Random_M5();
+    --PKG_S1_SMARTPHONES.bewijs_milestone_M5_S2();
     PKG_S2_SMARTPHONES.bewijs_milestone_M5_S2();
     COMMIT;
 end;
+
+BEGIN
+    PKG_S1_smartphones.empty_tables_s1();
+    PKG_S1_SMARTPHONES.bewijs_milestone_M4_S1();
+    PKG_S2_SMARTPHONES.bewijs_milestone_M7_S2();
+
+
+end;
+
+
 
 SELECT *
 FROM BRANDS

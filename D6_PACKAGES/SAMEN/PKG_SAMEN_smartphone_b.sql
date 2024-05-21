@@ -1,5 +1,7 @@
 CREATE OR REPLACE PACKAGE BODY PKG_SAMEN_smartphones AS
 
+    -- Random data functions
+
     FUNCTION generate_random_number(p_min IN NUMBER, p_max IN NUMBER) RETURN NUMBER IS
     BEGIN
         RETURN FLOOR(DBMS_RANDOM.VALUE(p_min, p_max));
