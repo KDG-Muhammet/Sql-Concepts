@@ -70,30 +70,9 @@ BEGIN
 
 end;
 
------------------------------------- milestone 8 --------------------------------
--- ik wil een overzicht zien van het aantal sales per promotion per store van een phone
-SELECT Sm.NAME, p.NAME, COUNT(SALE_ID),STORE_ID
-from SALES S
-         join SMARTPHONES Sm on Sm.PHONE_ID = S.PHONE_ID
-         join PROJECT.PROMOTIONS P on P.PROMOTION_ID = S.PROMOTION_ID
-where Sm.NAME = 'Samsung Note 7'
-group by sm.NAME, P.NAME ,STORE_ID;
-
-BEGIN
-    DBMS_STATS.GATHER_TABLE_STATS('PROJECT', 'SALES');
-end;
-
-select segment_name,
-       segment_type,
-       sum(bytes / 1024 / 1024)        MB,
-       (select COUNT(*) FROM SALES) as table_count
-from dba_segments
-where segment_name = 'SALES'
-group by segment_name, segment_type;
--- output voor sales met 633005 is 40mb
-
-
 SELECT *
 FROM SALES
 ORDER BY DBMS_RANDOM.VALUE()
     FETCH FIRST 10 ROWS ONLY;
+
+
