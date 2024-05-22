@@ -199,13 +199,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
     END random_date;
 
     FUNCTION random_element(p_elements SYS.ODCIVARCHAR2LIST) RETURN VARCHAR2 AS
-        v_element      VARCHAR2;
+        v_element      VARCHAR2(250);
         v_size         NUMBER;
         v_random_index NUMBER;
     BEGIN
         v_size := p_elements.COUNT;
         v_random_index := random_number(1, v_size + 1);
-        RETURN p_elements(v_random_index) in v_element;
+        v_element := p_elements(v_random_index);
+        RETURN v_element;
     END random_element;
 
     FUNCTION random_combination(
@@ -215,11 +216,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         v_random_element VARCHAR2(100);
     BEGIN
         v_random_element := random_element(p_list);
-        RETURN v_random_element || LPAD(p_counter, 3, '0');
+        RETURN v_random_element || LPAD(p_counter, 5, '0');
     END random_combination;
 
     FUNCTION random_mail(p_firstname IN VARCHAR2, p_lastname IN VARCHAR2, p_counter IN NUMBER) RETURN VARCHAR2 AS
-        v_mail           VARCHAR2;
         v_mail_providers SYS.ODCIVARCHAR2LIST := SYS.ODCIVARCHAR2LIST(
                 'gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'aol.com',
                 'icloud.com', 'mail.com', 'protonmail.com', 'zoho.com', 'gmx.com',
@@ -292,20 +292,24 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         v_lastname       VARCHAR2(100);
         -- time tracking for generation and insertion
         v_start_time_gen TIMESTAMP;
+        v_count          NUMBER;
     BEGIN
         v_start_time_gen := systimestamp;
         for i in 1..p_amount
             loop
+                v_firstname := random_element(v_first_names);
+                v_lastname := random_element(v_last_names);
                 add_user(
-                        random_element(v_first_names) IN v_firstname,
-                        random_element(v_last_names) IN v_lastname,
+                        v_firstname,
+                        v_lastname,
                         random_mail(v_firstname, v_lastname, i),
                         '0' || random_number(470000000, 499999999),
                         random_date(to_date('01-01-1990', 'DD-MM-YYYY'), to_date('31-12-2005', 'DD-MM-YYYY'))
                 );
             end loop;
+        SELECT COUNT(*) INTO v_count FROM USERS;
         DBMS_OUTPUT.PUT_LINE('Finished procedure generate_random_user with parameters: p_amount: ' || p_amount);
-        DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || (SELECT COUNT(*) FROM REVIEWS));
+        DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || v_count);
         DBMS_OUTPUT.PUT_LINE('Duration for generate_random_user: ' ||
                              timestamp_diff(systimestamp, v_start_time_gen) * 1000 || 'ms');
 
@@ -335,6 +339,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
                 'iQOO', 'Redmi Note', 'Redmi K', 'Poco X', 'Poco M');
         -- time tracking for generation and insertion
         v_start_time_gen    TIMESTAMP;
+        v_count             NUMBER;
     BEGIN
         v_start_time_gen := systimestamp;
         for i in 1..p_amount
@@ -349,8 +354,9 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
                         random_number(64, 512)
                 );
             end loop;
+        SELECT COUNT(*) INTO v_count FROM SMARTPHONES;
         DBMS_OUTPUT.PUT_LINE('Finished procedure generate_random_smartphone with parameters: p_amount: ' || p_amount);
-        DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || (SELECT COUNT(*) FROM SMARTPHONES));
+        DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || v_count);
         DBMS_OUTPUT.PUT_LINE('Duration for generate_random_smartphone: ' ||
                              timestamp_diff(systimestamp, v_start_time_gen) * 1000 || 'ms');
     END generate_random_smartphone;
@@ -363,7 +369,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
                 'Digital Trends', 'TechCrunch', 'AnandTech', 'Android Central', 'NotebookCheck',
                 '9to5Google', 'XDA Developers', 'iMore', 'Macworld', 'Wired',
                 'Ars Technica', 'SlashGear', 'Pocket-lint', 'uSwitch', 'Recombu',
-                'What Hi-Fi?', 'Tech Advisor', 'Android Headlines', 'Reviewed', 'Consumer Reports',
+                'What Hi-Fi', 'Tech Advisor', 'Android Headlines', 'Reviewed', 'Consumer Reports',
                 'NDTV Gadgets', 'AndroidPIT', 'TechSpot', 'ZDNet', 'Expert Reviews',
                 'Gizmodo', 'BGR', 'T3', 'Ubergizmo', 'Coolsmartphone',
                 'Know Your Mobile', 'Digital Photography School', 'Stuff', 'Laptop Mag', 'MakeUseOf',
@@ -374,7 +380,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
                 'Fudzilla', 'Shutterbug', 'HardwareZone', 'Pocketables', 'MobileTechReview',
                 'GearOpen', 'Phandroid', 'TopTenGamer', 'Toms Hardware', 'TechWalls',
                 'Phone Scoop', 'Android Community', 'Geeky Gadgets', 'Coolblue', 'Android Planet',
-                'Techblog', 'Clubic', 'Les Numériques', 'Toms Hardware FR', 'Les Mobiles',
+                'Techblog', 'Clubic', 'Les Numeriques', 'Toms Hardware FR', 'Les Mobiles',
                 '01net', 'Frandroid', 'Phonandroid', 'Journal du Geek', 'NextPit',
                 'Minimachines');
         v_website_countries SYS.ODCIVARCHAR2LIST := SYS.ODCIVARCHAR2LIST(
@@ -382,25 +388,28 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         v_website_name      VARCHAR2(100);
         -- time tracking for generation and insertion
         v_start_time_gen    TIMESTAMP;
+        v_count             NUMBER;
+        v_trimmed_name      VARCHAR2(100);
     BEGIN
         v_start_time_gen := systimestamp;
         for i in 1..p_amount
             loop
                 v_website_name := random_combination(v_website_names, i);
+                v_trimmed_name := REPLACE(v_website_name, ' ', '');
                 add_website(
-                        'www.' || v_website_name || '.com',
+                        'www.' || v_trimmed_name || '.com',
                         v_website_name,
                         random_number(10000, 1000000),
                         CASE
                             WHEN random_number(1, 3) = 1 THEN 'Y'
                             ELSE 'N'
                             END,
-                        random_element(SYS.ODCIVARCHAR2LIST('Belgium', 'Netherlands', 'Germany', 'France',
-                                                            'United Kingdom'))
+                        random_element(v_website_countries)
                 );
             end loop;
+        SELECT COUNT(*) INTO v_count FROM WEBSITES;
         DBMS_OUTPUT.PUT_LINE('Finished procedure generate_random_website with parameters: p_amount: ' || p_amount);
-        DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || (SELECT COUNT(*) FROM WEBSITES));
+        DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || v_count);
         DBMS_OUTPUT.PUT_LINE('Duration for generate_random_website: ' ||
                              timestamp_diff(systimestamp, v_start_time_gen) * 1000 || 'ms');
 
@@ -409,15 +418,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
 --Tabel D - Review
     PROCEDURE tussenreviews(p_amount IN NUMBER)
     AS
-        --Maakt voor ieder park, 3 willekeurige attracties in parkattracties
-        TYPE type_tab_userid IS table of USERS.USER_ID%TYPE;
-        TYPE type_tab_smartphoneid IS TABLE OF SMARTPHONES.PHONE_ID%TYPE;
-        TYPE type_tab_websiteid IS TABLE OF WEBSITES.WEBSITE_ID%TYPE;
-        TYPE type_tab_phone_releasedates IS TABLE OF SMARTPHONES.RELEASE_DATE%TYPE;
-        t_userid              type_tab_userid;
-        t_smartphoneid        type_tab_smartphoneid;
-        t_websiteid           type_tab_websiteid;
-        t_phonereleasedates   type_tab_phone_releasedates;
+        TYPE t_id_tab IS TABLE OF NUMBER;
+        TYPE t_date_tab IS TABLE OF DATE;
+        v_user_ids            t_id_tab             := t_id_tab();
+        v_phone_ids           t_id_tab             := t_id_tab();
+        v_website_ids         t_id_tab             := t_id_tab();
+        v_release_dates       t_date_tab           := t_date_tab();
+        v_id                  NUMBER;
+        v_date                DATE;
         v_random_userindex    NUMBER;
         v_random_phoneindex   NUMBER;
         v_random_websiteindex NUMBER;
@@ -427,7 +435,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         v_websiteid           WEBSITES.WEBSITE_ID%TYPE;
         v_posteddate          DATE;
         v_releasedate         DATE;
-        v_random_contentindex NUMBER;
         v_review_titles       SYS.ODCIVARCHAR2LIST := SYS.ODCIVARCHAR2LIST(
                 'Amazing Battery Life!',
                 'Great Performance, But Lacking in Camera',
@@ -636,38 +643,89 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
                 'The phone is fast and reliable. It hasn’t let me down so far.');
         -- time tracking for generation and insertion
         v_start_time_gen      TIMESTAMP;
+        v_count               NUMBER;
     BEGIN
-        SELECT USER_ID BULK COLLECT INTO t_userid FROM USERS;
-        SELECT PHONE_ID BULK COLLECT INTO t_smartphoneid FROM SMARTPHONES;
-        SELECT WEBSITE_ID BULK COLLECT INTO t_websiteid FROM WEBSITES;
-        SELECT RELEASE_DATE BULK COLLECT INTO t_phonereleasedates FROM SMARTPHONES;
+        DECLARE
+            CURSOR c_user_ids IS SELECT USER_ID
+                                 FROM USERS;
+            CURSOR c_phone_ids IS SELECT PHONE_ID
+                                  FROM SMARTPHONES;
+            CURSOR c_website_ids IS SELECT WEBSITE_ID
+                                    FROM WEBSITES;
+            CURSOR c_release_dates IS SELECT RELEASE_DATE
+                                      FROM SMARTPHONES;
+
+        BEGIN
+            OPEN c_user_ids;
+            LOOP
+                FETCH c_user_ids INTO v_id;
+                EXIT WHEN c_user_ids%NOTFOUND;
+                v_user_ids.EXTEND;
+                v_user_ids(v_user_ids.COUNT) := v_id;
+            END LOOP;
+            CLOSE c_user_ids;
+
+            OPEN c_phone_ids;
+            LOOP
+                FETCH c_phone_ids INTO v_id;
+                EXIT WHEN c_phone_ids%NOTFOUND;
+                v_phone_ids.EXTEND;
+                v_phone_ids(v_phone_ids.COUNT) := v_id;
+            END LOOP;
+            CLOSE c_phone_ids;
+
+            OPEN c_website_ids;
+            LOOP
+                FETCH c_website_ids INTO v_id;
+                EXIT WHEN c_website_ids%NOTFOUND;
+                v_website_ids.EXTEND;
+                v_website_ids(v_website_ids.COUNT) := v_id;
+            END LOOP;
+            CLOSE c_website_ids;
+
+            OPEN c_release_dates;
+            LOOP
+                FETCH c_release_dates INTO v_date;
+                EXIT WHEN c_release_dates%NOTFOUND;
+                v_release_dates.EXTEND;
+                v_release_dates(v_release_dates.COUNT) := v_date;
+            END LOOP;
+            CLOSE c_release_dates;
+        END;
+
+        v_generated_count := 0;
         v_start_time_gen := systimestamp;
         WHILE v_generated_count < p_amount
             LOOP
-                v_random_userindex := random_number(1, t_userid.count);
-                v_random_phoneindex := random_number(1, t_smartphoneid.count);
-                v_random_websiteindex := random_number(1, t_websiteid.count);
+                v_random_userindex := random_number(1, v_user_ids.count);
+                v_random_phoneindex := random_number(1, v_phone_ids.count);
+                v_random_websiteindex := random_number(1, v_website_ids.count);
 
-                v_userid := t_userid(v_random_userindex);
-                v_phoneid := t_smartphoneid(v_random_phoneindex);
-                v_websiteid := t_websiteid(v_random_websiteindex);
+                v_userid := v_user_ids(v_random_userindex);
+                v_phoneid := v_phone_ids(v_random_phoneindex);
+                v_websiteid := v_website_ids(v_random_websiteindex);
 
-                v_releasedate := t_phonereleasedates(v_random_phoneindex);
+                v_releasedate := v_release_dates(v_random_phoneindex);
                 v_posteddate := random_date(v_releasedate, to_date('31-12-2023', 'DD-MM-YYYY'));
-
-                v_random_contentindex := random_number(1, v_review_titles.count);
+                BEGIN
                 add_review(v_userid, v_phoneid, v_websiteid,
                            random_date(to_date('01-01-2010', 'DD-MM-YYYY'), to_date('31-12-2023', 'DD-MM-YYYY')),
-                           v_review_titles(v_random_contentindex) || v_generated_count,
-                           v_review_contents(v_random_contentindex),
+                           random_combination(v_review_titles, v_generated_count),
+                           random_element(v_review_contents),
                            random_number(0, 100),
                            random_number(1, 5),
                            random_date(v_posteddate, to_date('31-12-2023', 'DD-MM-YYYY'))
                 );
                 v_generated_count := v_generated_count + 1;
+                EXCEPTION
+                    WHEN DUP_VAL_ON_INDEX THEN
+                        NULL;
+                END;
+
             END LOOP;
+        SELECT COUNT(*) INTO v_count FROM REVIEWS;
         DBMS_OUTPUT.PUT_LINE('Finished procedure tussenReviews with parameters: p_amount: ' || p_amount);
-        DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || (SELECT COUNT(*) FROM REVIEWS));
+        DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || v_count);
         DBMS_OUTPUT.PUT_LINE('Duration for tussenreviews: ' ||
                              timestamp_diff(systimestamp, v_start_time_gen) * 1000 || 'ms');
         COMMIT;
@@ -682,7 +740,6 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         generate_random_website(p_website_amount);
         tussenreviews(p_review_amount);
     END bewijs_milestone_5_S1;
-
 
 END PKG_S1_smartphones;
 

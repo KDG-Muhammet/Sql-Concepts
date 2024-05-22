@@ -17,8 +17,7 @@ BEGIN
     --S1
     PKG_S1_smartphones.empty_tables_s1();
     PKG_S1_SMARTPHONES.bewijs_milestone_M4_S1();
-    --µ
---     --S2
+    --S2
     PKG_S2_smartphones.empty_tables_s2();
     PKG_S2_SMARTPHONES.bewijs_milestone_M4_S2();
 
@@ -39,16 +38,18 @@ BEGIN
 end;
 
 BEGIN
-    PKG_SAMEN_SMARTPHONES.bewijs_Random_M5();
-    --PKG_S1_SMARTPHONES.bewijs_milestone_M5_S2();
-    PKG_S2_SMARTPHONES.bewijs_milestone_M5_S2();
+    --PKG_SAMEN_SMARTPHONES.bewijs_Random_M5();
+    PKG_S1_SMARTPHONES.EMPTY_TABLES_S1();
+    PKG_S1_SMARTPHONES.bewijs_milestone_5_S1(3000, 3000, 3000, 40000);
+    --PKG_S2_SMARTPHONES.EMPTY_TABLES_S2();
+    --PKG_S2_SMARTPHONES.bewijs_milestone_M5_S2();
     COMMIT;
 end;
 
 BEGIN
-    PKG_S1_smartphones.empty_tables_s1();
-    PKG_S1_SMARTPHONES.bewijs_milestone_M4_S1();
-    PKG_S2_SMARTPHONES.bewijs_milestone_M7_S2();
+    --PKG_S1_smartphones.empty_tables_s1();
+    --PKG_S1_SMARTPHONES.bewijs_milestone_M4_S1();
+    --PKG_S2_SMARTPHONES.bewijs_milestone_M7_S2();
 
 
 end;
