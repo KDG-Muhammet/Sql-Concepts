@@ -68,8 +68,8 @@ BEGIN
     PKG_S1_smartphones.empty_tables_s1();
     PKG_S1_SMARTPHONES.BEWIJS_COMPARISON_SINGLE_BULK_S1(30000, 30000, 30000, 400000, FALSE);
     --PKG_S1_SMARTPHONES.bewijs_milestone_M4_S1();
-    --PKG_S2_SMARTPHONES.bewijs_milestone_M7_S2();
-
+    PKG_S2_SMARTPHONES.bewijs_milestone_M7_S2();
+    Commit;
 end;
 
 SELECT *
