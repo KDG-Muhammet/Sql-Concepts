@@ -128,7 +128,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
     FUNCTION random_number(p_min IN NUMBER, p_max IN NUMBER) RETURN NUMBER AS
         v_int NUMBER;
     BEGIN
-        v_int := TRUNC(DBMS_RANDOM.VALUE(p_min, p_max));
+        v_int := TRUNC(DBMS_RANDOM.VALUE(p_min, p_max+1));
         RETURN v_int;
     END random_number;
 
@@ -138,7 +138,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
     BEGIN
         --random date in the last year
         v_diff := TRUNC(p_max) - TRUNC(p_min);
-        v_date := TRUNC(p_min) + TRUNC(random_number(0, v_diff + 1));
+        v_date := TRUNC(p_min) + TRUNC(random_number(0, v_diff));
         RETURN v_date;
     END random_date;
 
@@ -148,7 +148,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         v_random_index NUMBER;
     BEGIN
         v_size := p_elements.COUNT;
-        v_random_index := random_number(1, v_size + 1);
+        v_random_index := random_number(1, v_size);
         v_element := p_elements(v_random_index);
         RETURN v_element;
     END random_element;
