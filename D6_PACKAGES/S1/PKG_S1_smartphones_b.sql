@@ -1,5 +1,7 @@
 CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
 
+    TYPE t_id_table IS TABLE OF NUMBER;
+
     PROCEDURE empty_tables_S1 IS
     BEGIN
 
@@ -770,8 +772,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         SELECT COUNT(*) INTO v_count FROM USERS;
         DBMS_OUTPUT.PUT_LINE('Finished procedure generate_random_user_BULK with parameters: p_amount: ' || p_amount);
         DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || v_count);
-        DBMS_OUTPUT.PUT_LINE('Duration for generation: ' || timestamp_diff(v_end_time_gen, v_start_time_gen) * 1000 || 'ms');
-        DBMS_OUTPUT.PUT_LINE('Duration for insertion: ' || timestamp_diff(v_end_time_ins, v_start_time_ins) * 1000 || 'ms');
+        DBMS_OUTPUT.PUT_LINE('Duration for generation: ' || timestamp_diff(v_end_time_gen, v_start_time_gen) * 1000 ||
+                             'ms');
+        DBMS_OUTPUT.PUT_LINE('Duration for insertion: ' || timestamp_diff(v_end_time_ins, v_start_time_ins) * 1000 ||
+                             'ms');
 
     END generate_random_user_BULK;
 
@@ -812,7 +816,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         v_start_time_gen    TIMESTAMP;
         v_end_time_gen      TIMESTAMP;
         v_start_time_ins    TIMESTAMP;
-        v_end_time_ins     TIMESTAMP;
+        v_end_time_ins      TIMESTAMP;
         v_count             NUMBER;
     BEGIN
         v_start_time_gen := systimestamp;
@@ -859,8 +863,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         DBMS_OUTPUT.PUT_LINE('Finished procedure generate_random_smartphone_BULK with parameters: p_amount: ' ||
                              p_amount);
         DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || v_count);
-        DBMS_OUTPUT.PUT_LINE('Duration for generation: ' || timestamp_diff(v_end_time_gen, v_start_time_gen) * 1000 || 'ms');
-        DBMS_OUTPUT.PUT_LINE('Duration for insertion: ' || timestamp_diff(v_end_time_ins, v_start_time_ins) * 1000 || 'ms');
+        DBMS_OUTPUT.PUT_LINE('Duration for generation: ' || timestamp_diff(v_end_time_gen, v_start_time_gen) * 1000 ||
+                             'ms');
+        DBMS_OUTPUT.PUT_LINE('Duration for insertion: ' || timestamp_diff(v_end_time_ins, v_start_time_ins) * 1000 ||
+                             'ms');
     END generate_random_smartphone_BULK;
 
 --Tabel C - Website BULK
@@ -899,7 +905,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         v_start_time_gen         TIMESTAMP;
         v_end_time_gen           TIMESTAMP;
         v_start_time_ins         TIMESTAMP;
-        v_end_time_ins     TIMESTAMP;
+        v_end_time_ins           TIMESTAMP;
         v_count                  NUMBER;
         v_trimmed_name           VARCHAR2(100);
     BEGIN
@@ -942,8 +948,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         SELECT COUNT(*) INTO v_count FROM WEBSITES;
         DBMS_OUTPUT.PUT_LINE('Finished procedure generate_random_website_BULK with parameters: p_amount: ' || p_amount);
         DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || v_count);
-        DBMS_OUTPUT.PUT_LINE('Duration for generation: ' || timestamp_diff(v_end_time_gen, v_start_time_gen) * 1000 || 'ms');
-        DBMS_OUTPUT.PUT_LINE('Duration for insertion: ' || timestamp_diff(v_end_time_ins, v_start_time_ins) * 1000 || 'ms');
+        DBMS_OUTPUT.PUT_LINE('Duration for generation: ' || timestamp_diff(v_end_time_gen, v_start_time_gen) * 1000 ||
+                             'ms');
+        DBMS_OUTPUT.PUT_LINE('Duration for insertion: ' || timestamp_diff(v_end_time_ins, v_start_time_ins) * 1000 ||
+                             'ms');
 
     END generate_random_website_BULK;
 
@@ -1158,11 +1166,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
                 'The phone is fast and reliable. It hasn’t let me down so far.');
         --
         TYPE t_varchar_tab IS TABLE OF VARCHAR2(250);
-        TYPE t_number_tab IS TABLE OF NUMBER;
         TYPE t_date_tab IS TABLE OF DATE;
-        v_user_id          t_number_tab;
-        v_phone_id         t_number_tab;
-        v_website_id       t_number_tab;
+        TYPE t_number_tab IS TABLE OF NUMBER;
+        t_user_id          t_id_table;
+        t_phone_id         t_id_table;
+        t_website_id       t_id_table;
+        v_user_id          t_id_table;
+        v_phone_id         t_id_table;
+        v_website_id       t_id_table;
         v_posted_date      t_date_tab;
         v_title            t_varchar_tab;
         v_content          t_varchar_tab;
@@ -1178,16 +1189,17 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         v_start_time_ins   TIMESTAMP;
         v_end_time_ins     TIMESTAMP;
         v_count            NUMBER;
-            v_user_count    NUMBER;
-            v_phone_count      NUMBER;
-            v_website_count    NUMBER;
     BEGIN
         v_generated_count := 0;
         v_start_time_gen := systimestamp;
 
-        v_user_id := t_number_tab();
-        v_phone_id := t_number_tab();
-        v_website_id := t_number_tab();
+        t_user_id := t_id_table();
+        t_phone_id := t_id_table();
+        t_website_id := t_id_table();
+
+        v_user_id := t_id_table();
+        v_phone_id := t_id_table();
+        v_website_id := t_id_table();
         v_posted_date := t_date_tab();
         v_title := t_varchar_tab();
         v_content := t_varchar_tab();
@@ -1195,9 +1207,9 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         v_rating := t_number_tab();
         v_last_edited_date := t_date_tab();
 
-        SELECT COUNT(*) INTO v_user_count FROM USERS;
-        SELECT COUNT(*) INTO v_phone_count FROM SMARTPHONES;
-        SELECT COUNT(*) INTO v_website_count FROM WEBSITES;
+        SELECT USER_ID BULK COLLECT INTO t_user_id FROM USERS;
+        SELECT PHONE_ID BULK COLLECT INTO t_phone_id FROM SMARTPHONES;
+        SELECT WEBSITE_ID BULK COLLECT INTO t_website_id FROM WEBSITES;
 
         FOR i IN 1..p_amount
             LOOP
@@ -1211,9 +1223,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
                 v_rating.extend;
                 v_last_edited_date.extend;
 
-                v_user_id(v_user_id.count) := random_number(1,v_user_count );
-                v_phone_id(v_phone_id.count) := random_number(1, v_phone_count);
-                v_website_id(v_website_id.count) := random_number(1, v_website_count);
+                v_user_id(v_user_id.count) := t_user_id(random_number(1, t_user_id.COUNT));
+                v_phone_id(v_phone_id.count) := t_phone_id(random_number(1, t_phone_id.COUNT));
+                v_website_id(v_website_id.count) := t_website_id(random_number(1, t_website_id.COUNT));
+
                 v_posted_date(v_posted_date.count) :=
                         random_date(to_date('01-01-2010', 'DD-MM-YYYY'), to_date('31-12-2023', 'DD-MM-YYYY'));
                 v_title(v_title.count) := random_combination(v_review_titles, i);
@@ -1237,8 +1250,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         SELECT COUNT(*) INTO v_count FROM REVIEWS;
         DBMS_OUTPUT.PUT_LINE('Finished procedure tussenreviews_BULK with parameters: p_amount: ' || p_amount);
         DBMS_OUTPUT.PUT_LINE('Actual amount of Rows added: ' || v_count);
-        DBMS_OUTPUT.PUT_LINE('Duration for generation: ' || timestamp_diff(v_end_time_gen, v_start_time_gen) * 1000 || 'ms');
-        DBMS_OUTPUT.PUT_LINE('Duration for insertion: ' || timestamp_diff(v_end_time_ins, v_start_time_ins) * 1000 || 'ms');
+        DBMS_OUTPUT.PUT_LINE('Duration for generation: ' || timestamp_diff(v_end_time_gen, v_start_time_gen) * 1000 ||
+                             'ms');
+        DBMS_OUTPUT.PUT_LINE('Duration for insertion: ' || timestamp_diff(v_end_time_ins, v_start_time_ins) * 1000 ||
+                             'ms');
         COMMIT;
     END tussenreviews_BULK;
 
@@ -1328,14 +1343,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
             bewijs_milestone_M4_S1();
             bewijs_milestone_5_S1(p_user_amount, p_phone_amount, p_website_amount, p_review_amount);
         END IF;
-            DBMS_OUTPUT.PUT_LINE(' ------ BULK Generation ------ ');
-            empty_tables_S1();
-            bewijs_milestone_M4_S1();
+        DBMS_OUTPUT.PUT_LINE(' ------ BULK Generation ------ ');
+        empty_tables_S1();
+        bewijs_milestone_M4_S1();
 
-            generate_random_user_BULK(p_user_amount);
-            generate_random_smartphone_BULK(p_phone_amount);
-            generate_random_website_BULK(p_website_amount);
-            tussenreviews_BULK(p_review_amount);
+        generate_random_user_BULK(p_user_amount);
+        generate_random_smartphone_BULK(p_phone_amount);
+        generate_random_website_BULK(p_website_amount);
+        tussenreviews_BULK(p_review_amount);
 
     END bewijs_Comparison_Single_Bulk_S1;
 
