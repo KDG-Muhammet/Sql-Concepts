@@ -2,21 +2,13 @@
 -- ik wil een overzicht zien van het aantal sales per promotion van een phone
 
 --------Originele query
-SELECT S.STORE_ID,
-       Sm.NAME                                                                        AS SMARTPHONE_NAME,
-       P.NAME                                                                         AS PROMOTION_NAME,
-       SUM(S.DUE_DATES)                                                               AS TOTAL_SALE_VALUE,
-       COUNT(S.SALE_ID)                                                               AS TOTAL_SALES,
-       SUM(S.DUE_DATES) OVER (PARTITION BY S.STORE_ID ORDER BY SUM(S.DUE_DATES) DESC) AS CUMULATIVE_SALES,
-       RANK() OVER (PARTITION BY S.STORE_ID ORDER BY SUM(S.DUE_DATES) DESC)           AS PROMOTION_RANK
+SELECT Sm.NAME AS smartphone_name, P.NAME AS promotion_name, COUNT(SALE_ID) AS sale_count
 FROM SALES S
-         JOIN
-     SMARTPHONES Sm ON Sm.PHONE_ID = S.PHONE_ID
-         JOIN
-     PROMOTIONS P ON P.PROMOTION_ID = S.PROMOTION_ID
+         JOIN SMARTPHONES Sm ON Sm.PHONE_ID = S.PHONE_ID
+         JOIN PROMOTIONS P ON P.PROMOTION_ID = S.PROMOTION_ID
 WHERE Sm.NAME = 'Samsung Note 7'
-GROUP BY S.STORE_ID, Sm.NAME, P.NAME
-ORDER BY S.STORE_ID, PROMOTION_RANK;
+GROUP BY Sm.NAME, P.NAME;
+
 
 ------- Bereken de statistieken voor de tabel
 BEGIN

@@ -233,7 +233,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
     END bewijs_milestone_M4_S2;
 
 
-    -- functies generate random rows
+
     FUNCTION get_unused_address_id(used_address_ids IN OUT NOCOPY t_address_id_table,
                                    available_address_ids IN t_address_id_table) RETURN NUMBER IS
         v_random_index PLS_INTEGER;
@@ -251,6 +251,15 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
             END IF;
         END LOOP;
     END get_unused_address_id;
+
+    FUNCTION get_ids(available_ids IN OUT NOCOPY t_address_id_table) RETURN NUMBER IS
+        v_random_index PLS_INTEGER;
+        v_id   NUMBER;
+    BEGIN
+            v_random_index := PKG_SAMEN_SMARTPHONES.generate_random_number(1, available_ids.COUNT);
+            v_id := available_ids(v_random_index);
+        return v_id;
+    END get_ids;
 
     PROCEDURE generate_addresses(p_count IN NUMBER) IS
         v_zip             NUMBER;
@@ -462,12 +471,22 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_end_timestamp   TIMESTAMP;
         v_duration        NUMBER;
         total_rows_added  NUMBER := 0;
+        v_available_promotion_ids t_address_id_table;
+        v_available_phone_ids t_address_id_table;
         CURSOR c_brand_stores IS
             SELECT STORE_ID
             FROM BRAND_STORES;
 
     BEGIN
         v_start_timestamp := SYSTIMESTAMP;
+
+        SELECT PHONE_ID BULK COLLECT
+        INTO v_available_phone_ids
+        FROM SMARTPHONES;
+
+        SELECT PROMOTION_ID BULK COLLECT
+        INTO v_available_promotion_ids
+        FROM PROMOTIONS;
 
         FOR r_brand_store IN c_brand_stores
             LOOP
@@ -479,8 +498,8 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
                                 SYS.ODCIVARCHAR2LIST('John Doe', 'Jane Smith', 'Alice Johnson', 'Bob Brown',
                                                      'Eve Wilson'), i);
                         v_sale_date := v_due_dates + PKG_SAMEN_SMARTPHONES.generate_random_number(10, 30);
-                        v_promotion_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1006, 1035);
-                        v_phone_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, 5);
+                        v_promotion_id := get_ids(v_available_promotion_ids);
+                        v_phone_id := get_ids(v_available_phone_ids);
                         v_store_id := r_brand_store.STORE_ID;
 
                         INSERT INTO sales (due_dates, phone_ID, promotion_id, store_id, name, sale_date)
@@ -796,10 +815,11 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
         v_sale_date       DATE;
         v_promotion_id    NUMBER;
         v_phone_id        NUMBER;
-        v_store_id        NUMBER;
         v_start_timestamp TIMESTAMP;
         v_end_timestamp   TIMESTAMP;
         v_duration        NUMBER;
+        v_available_promotion_ids t_address_id_table;
+        v_available_phone_ids t_address_id_table;
         total_rows_added  NUMBER := 0;
         CURSOR c_brand_stores IS
             SELECT STORE_ID
@@ -808,6 +828,14 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
     BEGIN
 
         v_start_timestamp := SYSTIMESTAMP;
+
+        SELECT PHONE_ID BULK COLLECT
+        INTO v_available_phone_ids
+        FROM SMARTPHONES;
+
+        SELECT PROMOTION_ID BULK COLLECT
+        INTO v_available_promotion_ids
+        FROM PROMOTIONS;
 
         FOR r_brand_store IN c_brand_stores
             LOOP
@@ -822,8 +850,10 @@ CREATE OR REPLACE PACKAGE BODY PKG_S2_smartphones AS
                                                      'Eve Wilson'),
                                 i);
                         v_sale_date := v_due_dates + PKG_SAMEN_SMARTPHONES.generate_random_number(10, 30);
-                        v_promotion_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1006, 1035);
-                        v_phone_id := PKG_SAMEN_SMARTPHONES.generate_random_number(1, 5);
+                        v_promotion_id := get_ids(v_available_promotion_ids);
+                        v_phone_id := get_ids(v_available_phone_ids);
+
+
 
 
                         v_sales((r_brand_store.STORE_ID - 1) * s_rows_per_store + i).STORE_ID :=
