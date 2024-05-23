@@ -1323,10 +1323,12 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
                                                p_review_amount IN NUMBER, p_single IN BOOLEAN) AS
     BEGIN
         IF (p_single) THEN
+            DBMS_OUTPUT.PUT_LINE(' ------ Single Generation ------ ');
             empty_tables_S1();
             bewijs_milestone_M4_S1();
             bewijs_milestone_5_S1(p_user_amount, p_phone_amount, p_website_amount, p_review_amount);
         END IF;
+            DBMS_OUTPUT.PUT_LINE(' ------ BULK Generation ------ ');
             empty_tables_S1();
             bewijs_milestone_M4_S1();
 
