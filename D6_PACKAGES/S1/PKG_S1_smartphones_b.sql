@@ -644,6 +644,11 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
         -- time tracking for generation and insertion
         v_start_time_gen      TIMESTAMP;
         v_count               NUMBER;
+        v_title               VARCHAR2(100);
+        v_content             VARCHAR2(250);
+        v_likes               NUMBER;
+        v_rating              NUMBER;
+        v_last_edited_date    DATE;
     BEGIN
         DECLARE
             CURSOR c_user_ids IS SELECT USER_ID
@@ -708,14 +713,28 @@ CREATE OR REPLACE PACKAGE BODY PKG_S1_smartphones AS
                 v_releasedate := v_release_dates(v_random_phoneindex);
                 v_posteddate := random_date(v_releasedate, to_date('31-12-2023', 'DD-MM-YYYY'));
                 BEGIN
-                add_review(v_userid, v_phoneid, v_websiteid,
+                /*add_review(v_userid, v_phoneid, v_websiteid,
                            random_date(to_date('01-01-2010', 'DD-MM-YYYY'), to_date('31-12-2023', 'DD-MM-YYYY')),
                            random_combination(v_review_titles, v_generated_count),
                            random_element(v_review_contents),
                            random_number(0, 100),
                            random_number(1, 5),
                            random_date(v_posteddate, to_date('31-12-2023', 'DD-MM-YYYY'))
-                );
+                );*/
+                v_posteddate := random_date(to_date('01-01-2010', 'DD-MM-YYYY'), to_date('31-12-2023', 'DD-MM-YYYY'));
+                v_title := random_combination(v_review_titles, v_generated_count);
+                v_content := random_element(v_review_contents);
+                v_likes := random_number(0, 10000);
+                v_rating := random_number(1, 5);
+                v_last_edited_date := random_date(v_posteddate, to_date('31-12-2023', 'DD-MM-YYYY'));
+                INSERT INTO REVIEWS (REVIEW_USER_ID, REVIEW_PHONE_ID, WEBSITE_ID, POSTEDDATE, TITLE, CONTENT, LIKES, RATING, LAST_EDITED_DATE)
+                VALUES (v_userid, v_phoneid, v_websiteid,
+                        v_posteddate,
+                        v_title,
+                        v_content,
+                        v_likes,
+                        v_rating,
+                        v_last_edited_date);
                 v_generated_count := v_generated_count + 1;
                 EXCEPTION
                     WHEN DUP_VAL_ON_INDEX THEN
